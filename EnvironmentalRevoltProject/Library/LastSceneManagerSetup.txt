@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/EnviRev.unity
+- path: Assets/mapGen.unity
   isLoaded: 1
   isActive: 1
