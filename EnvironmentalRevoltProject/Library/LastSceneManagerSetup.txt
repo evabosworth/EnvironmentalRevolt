@@ -1,4 +1,8 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Character testing.unity
+=======
+- path: Assets/mapGen.unity
+>>>>>>> b5511d6ee9f9a3f7943f1e88079e5b70f89bc91d
   isLoaded: 1
   isActive: 1
