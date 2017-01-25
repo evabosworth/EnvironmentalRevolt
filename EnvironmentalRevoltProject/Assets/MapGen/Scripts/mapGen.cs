@@ -3,19 +3,59 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class mapGen : MonoBehaviour {
+	//Starting with plains with light hills, so few particles, low max height
 	public GameObject terrain;
-	private int xSize = 30;
-	private int zSize = 30;
+	int xSize = 100;
+	int zSize = 100;
+	int maxHeight = 20;
+	int maxDepth = 0;
+	int maxStep = 0; //height can only change on level at a time, MUST be non-zero
+	int[,] terrainGrid;
+	int passes = 5;
+	int neighborPasses = 2;
+
+	int numParticleStarts = 20;
+	int numParticleSteps = 1000;
+	int numNegParticleStarts = 15;
+	int numNegParticleSteps = 500;
 
 	// Use this for initialization
 	void Start () {
-		int y = 0;
-		for (int x = 0; x < xSize; x++) {
-			for (int z = 0; z < zSize; z++) {
-				createTerrain (terrain, new Vector3 (x, y, z), x, z);
-				
-			}
+		float startTime = Time.realtimeSinceStartup;
+		print ("start: " + startTime);
+		print ("start: 0");
+
+		if (maxStep < 0) {
+			maxStep = 0;
 		}
+
+		terrainGrid = new int[xSize, zSize];
+
+		int starts = numParticleStarts + numNegParticleStarts;
+		for (int start = 0; start < starts; start++) {
+			int particleChange = 1;
+			int steps = numParticleSteps;
+			//If all positive have been done, do negative
+			if(start >= numParticleStarts){
+				steps = numNegParticleSteps;
+				particleChange = -1;
+			}
+
+			particleDeposition (steps, particleChange);
+		}
+
+		float preAlgorithm = Time.realtimeSinceStartup;
+		print ("pre-algorithm: " + (preAlgorithm - startTime));
+		flattenTerrain ();
+
+		float postAlgorithm = Time.realtimeSinceStartup;
+		print ("post-algorithm, pre-visual: " + (postAlgorithm- preAlgorithm));
+		createTerrainGrid ();
+		float postTerrain = Time.realtimeSinceStartup;
+		print ("post-Terrain" + (postTerrain - postAlgorithm));
+
+		float total = Time.realtimeSinceStartup - startTime;
+		print ("Total: " + total);  
 	}
 	
 	// Update is called once per frame
@@ -23,8 +63,224 @@ public class mapGen : MonoBehaviour {
 		
 	}
 
-	private void createTerrain(GameObject terrain, Vector3 position, int x, int z){
+	private void flattenTerrain(){
+		redistributeTerrain ();
+		for (int pass = 0; pass < neighborPasses; pass++) {
+			for (int x = 0; x < xSize; x++) {
+				for (int z = 0; z < zSize; z++) {
+					/*
+					bool inboundx1 = false;
+					bool inboundxNeg1 = false;
+					bool inboundz1 = false;
+					bool inboundzNeg1 = false;
+					*/
+					int numer = 0;
+					int denom = 0;
+					int valx1 = 0;
+					int valxNeg1 = 0;
+					int valz1 = 0;
+					int valzNeg1 = 0;
+					if (x < xSize - 1) {
+						valx1 = terrainGrid [x + 1, z];
+						denom++;
+						numer += valx1;
+						//inboundx1 = true;
+					}
+					if (x > 0) {
+						valxNeg1 = terrainGrid [x - 1, z];
+						denom++;
+						numer += valxNeg1;
+						//inboundxNeg1 = true;
+					}
+					if (z < zSize - 1) {
+						valz1 = terrainGrid [x, z + 1];
+						denom++;
+						numer += valz1;
+						//inboundz1 = true;
+					}
+					if (z > 0) {
+						valzNeg1 = terrainGrid [x, z - 1];
+						denom++;
+						numer += valzNeg1;
+						//inboundzNeg1 = true;
+					}
+
+					int height =(int) (numer / denom + Random.value);
+					terrainGrid [x, z] = height;
+
+				}
+			}
+		}
+
+	}
+
+	/*
+	 * Using max height, flatten the terrain a number of passes
+	 * the more passes the flatter the terrain
+	 * uses, maxHeight, maxDepth, Passes
+	**/
+	private void redistributeTerrain(){
+		for (int pass = 0; pass < passes; pass++) {
+			for (int x = 0; x < xSize; x++) {
+				for (int z = 0; z < zSize; z++) {
+					int valx1 = int.MinValue;
+					int valxNeg1 = int.MinValue;
+					int valz1 = int.MinValue;
+					int valzNeg1 = int.MinValue;
+					int curVal = terrainGrid [x, z];
+					if (x < xSize - 1) {
+						valx1 = terrainGrid [x + 1, z];
+					}
+					if (x > 0) {
+						valxNeg1 = terrainGrid [x - 1, z];
+					}
+					if (z < zSize - 1) {
+						valz1 = terrainGrid [x, z + 1];
+					}
+					if (z > 0) {
+						valzNeg1 = terrainGrid [x, z - 1];
+					}
+
+					if (terrainGrid [x, z] > 0){ //maxHeight) {
+						/* first try, using particle split instead of redistribute*/
+						if (valx1 != int.MinValue && valx1 < maxHeight && valx1 + maxStep > curVal) {
+							terrainGrid [x + 1, z] += 1;
+						}if (valxNeg1 != int.MinValue && valxNeg1 < maxHeight && valxNeg1 + maxStep > curVal) {
+							terrainGrid [x - 1, z] += 1;
+						}if (valz1 != int.MinValue && valz1 < maxHeight && valz1 + maxStep > curVal) {
+							terrainGrid [x, z + 1] += 1;
+						}if (valzNeg1 != int.MinValue && valzNeg1 < maxHeight && valzNeg1 + maxStep > curVal) {
+							terrainGrid [x, z - 1] += 1;
+						}
+
+
+						//First try step after leveling check
+						if (terrainGrid [x, z] > maxHeight) {
+							terrainGrid [x, z] -= 1;
+						}
+					} else {//if (terrainGrid [x, z] < maxDepth*-1) {
+						/* first try, using particle split instead of redistrubte*/
+
+						if (valx1 > maxDepth && valx1 - maxStep < curVal) {
+							terrainGrid [x + 1, z] -= 1;
+						}if (valxNeg1 > maxDepth && valxNeg1 - maxStep < curVal) {
+							terrainGrid [x - 1, z] -= 1;
+						}if (valz1 > maxDepth && valz1 - maxStep < curVal) {
+							terrainGrid [x, z + 1] -= 1;
+						}if (valzNeg1 > maxDepth && valzNeg1 - maxStep < curVal) {
+							terrainGrid [x, z - 1] -= 1;
+						}
+
+
+						//First try step after leveling check
+						if (terrainGrid [x, z] < maxDepth * -1) {
+							terrainGrid [x, z] += 1;
+						}
+					}
+
+					if (pass == passes - 1) {
+						if (terrainGrid [x, z] > maxHeight) {
+							terrainGrid [x, z] = maxHeight;
+						}if (terrainGrid [x, z] < maxDepth*-1) {
+							terrainGrid [x, z] = maxDepth*-1;
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+	/*
+	 * takes in the curstep, and the charge of the particle
+	 * returns void
+	 * side effect, alters TerrainGrid with different sizes
+	 */
+	private void particleDeposition(int steps,  int particleChange){
+		int xPos = (int)(Random.value * xSize);
+		int zPos = (int)(Random.value * zSize);
+
+		for (int step = 0; step < steps; step++) {
+			//int curValue = terrainGrid [xPos, zPos];
+			if (particleChange > 0) {
+				terrainGrid [xPos, zPos] += particleChange;
+			} else {
+					terrainGrid [xPos, zPos] += particleChange;
+			}
+
+			int rng = (int)(Random.value *4);
+			switch(rng) {
+			case 0: xPos++;break; // move right
+			case 1: xPos--;break; // move left
+			case 2: zPos++;break; // move closer
+			case 3: zPos--;break; // move away
+			}
+			if (xPos < 0) {
+				xPos = 0;
+			}else if (xPos >= xSize) {
+				xPos = xSize-1;
+			}
+			if (zPos < 0) {
+				zPos = 0;
+			}else if (zPos >= zSize) {
+				zPos = zSize-1;
+			}
+		}
+	}
+
+	/*
+	 * Takes in a terrain block (lava, grass, normal, ...) a position and location (for naming) [probably don't need]
+	 * returns void, 
+	 * side effect visually creates a terrain block at position
+	**/
+	private void createTerrain(GameObject terrain, Vector3 position){
+		int x = (int)position.x;
+		int y = (int)position.y;
+		int z = (int)position.z;
 		GameObject terrainClone = (GameObject)Instantiate (terrain, position, transform.rotation);
-		terrainClone.name = "terrain:x," + x + ":z," + z; 
+		terrainClone.name = "terrain:x" + x + ":y" + y + ":z" + z; 
+	}
+
+	/*
+	 * side effect visualizes the entire terrainGrid after particle depistion and smoothing
+	**/
+	public void createTerrainGrid(){
+		float y = 0;
+		for (int x = 0; x < xSize; x++) {
+			for (int z = 0; z < zSize; z++) {
+				y = terrainGrid [x, z]*0.5f;
+				createTerrain (terrain, new Vector3 (x, y, z));
+				//Check surround for heights, fill in below
+
+				int curVal = terrainGrid [x, z];
+				int lowest = curVal;
+				if (x < xSize - 1) {
+					int temp = terrainGrid [x + 1, z];
+					if (temp < lowest) {lowest = temp;}
+				} else {lowest = maxDepth*-1;}
+
+				if (x > 0) {
+					int temp = terrainGrid [x - 1, z];
+					if (temp < lowest) {lowest = temp;}
+				} else {lowest = maxDepth*-1;}
+
+				if (z < zSize - 1) {
+					int temp = terrainGrid [x, z + 1];
+					if (temp < lowest) {lowest = temp;}
+				} else {lowest = maxDepth*-1;}
+
+				if (z > 0) {
+					int temp = terrainGrid [x, z - 1];
+					if (temp < lowest) {lowest = temp;}
+				} else {lowest = maxDepth*-1;}
+
+
+				for (int fillPos = lowest; fillPos < curVal; fillPos++) {
+					y = fillPos*0.5f;
+					createTerrain (terrain, new Vector3 (x, y, z));
+				}
+
+			}
+		}
 	}
 }
