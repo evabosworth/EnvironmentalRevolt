@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class mapGen : MonoBehaviour {
+
 	//Starting with plains with light hills, so few particles, low max height
 	public GameObject terrain;
 	int xSize = 100;
 	int zSize = 100;
-	int maxHeight = 20;
-	int maxDepth = 0;
-	int maxStep = 0; //height can only change on level at a time, MUST be non-zero
+	int maxHeight = int.MaxValue;
+	//0 or 1 creates hills, 3,4 creates canyons
+	int maxStep = 1; //height can only change on level at a time, not sure what this does anymore
+	int stepSize = 1;
 	int[,] terrainGrid;
 	int passes = 5;
-	int neighborPasses = 2;
+	int neighborPasses = 5;
 
 	int numParticleStarts = 20;
 	int numParticleSteps = 1000;
-	int numNegParticleStarts = 15;
-	int numNegParticleSteps = 500;
 
 	// Use this for initialization
 	void Start () {
+		int seed = 12;
+		Random.InitState (seed);
+
 		float startTime = Time.realtimeSinceStartup;
 		print ("start: " + startTime);
 		print ("start: 0");
@@ -31,15 +34,11 @@ public class mapGen : MonoBehaviour {
 
 		terrainGrid = new int[xSize, zSize];
 
-		int starts = numParticleStarts + numNegParticleStarts;
+		int starts = numParticleStarts;
 		for (int start = 0; start < starts; start++) {
 			int particleChange = 1;
 			int steps = numParticleSteps;
 			//If all positive have been done, do negative
-			if(start >= numParticleStarts){
-				steps = numNegParticleSteps;
-				particleChange = -1;
-			}
 
 			particleDeposition (steps, particleChange);
 		}
@@ -117,7 +116,7 @@ public class mapGen : MonoBehaviour {
 	/*
 	 * Using max height, flatten the terrain a number of passes
 	 * the more passes the flatter the terrain
-	 * uses, maxHeight, maxDepth, Passes
+	 * uses, maxHeight, Passes
 	**/
 	private void redistributeTerrain(){
 		for (int pass = 0; pass < passes; pass++) {
@@ -158,31 +157,11 @@ public class mapGen : MonoBehaviour {
 						if (terrainGrid [x, z] > maxHeight) {
 							terrainGrid [x, z] -= 1;
 						}
-					} else {//if (terrainGrid [x, z] < maxDepth*-1) {
-						/* first try, using particle split instead of redistrubte*/
-
-						if (valx1 > maxDepth && valx1 - maxStep < curVal) {
-							terrainGrid [x + 1, z] -= 1;
-						}if (valxNeg1 > maxDepth && valxNeg1 - maxStep < curVal) {
-							terrainGrid [x - 1, z] -= 1;
-						}if (valz1 > maxDepth && valz1 - maxStep < curVal) {
-							terrainGrid [x, z + 1] -= 1;
-						}if (valzNeg1 > maxDepth && valzNeg1 - maxStep < curVal) {
-							terrainGrid [x, z - 1] -= 1;
-						}
-
-
-						//First try step after leveling check
-						if (terrainGrid [x, z] < maxDepth * -1) {
-							terrainGrid [x, z] += 1;
-						}
-					}
+					} 
 
 					if (pass == passes - 1) {
 						if (terrainGrid [x, z] > maxHeight) {
 							terrainGrid [x, z] = maxHeight;
-						}if (terrainGrid [x, z] < maxDepth*-1) {
-							terrainGrid [x, z] = maxDepth*-1;
 						}
 					}
 
@@ -203,9 +182,9 @@ public class mapGen : MonoBehaviour {
 		for (int step = 0; step < steps; step++) {
 			//int curValue = terrainGrid [xPos, zPos];
 			if (particleChange > 0) {
-				terrainGrid [xPos, zPos] += particleChange;
+				terrainGrid [xPos, zPos] += particleChange*stepSize;
 			} else {
-					terrainGrid [xPos, zPos] += particleChange;
+				terrainGrid [xPos, zPos] += particleChange*stepSize;
 			}
 
 			int rng = (int)(Random.value *4);
@@ -257,22 +236,22 @@ public class mapGen : MonoBehaviour {
 				if (x < xSize - 1) {
 					int temp = terrainGrid [x + 1, z];
 					if (temp < lowest) {lowest = temp;}
-				} else {lowest = maxDepth*-1;}
+				} else {lowest = 0;}
 
 				if (x > 0) {
 					int temp = terrainGrid [x - 1, z];
 					if (temp < lowest) {lowest = temp;}
-				} else {lowest = maxDepth*-1;}
+				} else {lowest = 0;}
 
 				if (z < zSize - 1) {
 					int temp = terrainGrid [x, z + 1];
 					if (temp < lowest) {lowest = temp;}
-				} else {lowest = maxDepth*-1;}
+				} else {lowest = 0;}
 
 				if (z > 0) {
 					int temp = terrainGrid [x, z - 1];
 					if (temp < lowest) {lowest = temp;}
-				} else {lowest = maxDepth*-1;}
+				} else {lowest = 0;}
 
 
 				for (int fillPos = lowest; fillPos < curVal; fillPos++) {
