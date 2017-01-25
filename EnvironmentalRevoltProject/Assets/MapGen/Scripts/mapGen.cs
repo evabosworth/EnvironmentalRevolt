@@ -10,7 +10,7 @@ public class mapGen : MonoBehaviour {
 	int zSize = 100;
 	int maxHeight = int.MaxValue;
 	//0 or 1 creates hills, 3,4 creates canyons
-	int maxStep = 1; //height can only change on level at a time, not sure what this does anymore
+	int redistributeThreshold = 1; //height can only change on level at a time, not sure what this does anymore
 	int stepSize = 1;
 	int[,] terrainGrid;
 	int passes = 5;
@@ -27,10 +27,6 @@ public class mapGen : MonoBehaviour {
 		float startTime = Time.realtimeSinceStartup;
 		print ("start: " + startTime);
 		print ("start: 0");
-
-		if (maxStep < 0) {
-			maxStep = 0;
-		}
 
 		terrainGrid = new int[xSize, zSize];
 
@@ -142,13 +138,13 @@ public class mapGen : MonoBehaviour {
 
 					if (terrainGrid [x, z] > 0){ //maxHeight) {
 						/* first try, using particle split instead of redistribute*/
-						if (valx1 != int.MinValue && valx1 < maxHeight && valx1 + maxStep > curVal) {
+						if (valx1 != int.MinValue && valx1 < maxHeight && valx1 + redistributeThreshold > curVal) {
 							terrainGrid [x + 1, z] += 1;
-						}if (valxNeg1 != int.MinValue && valxNeg1 < maxHeight && valxNeg1 + maxStep > curVal) {
+						}if (valxNeg1 != int.MinValue && valxNeg1 < maxHeight && valxNeg1 + redistributeThreshold > curVal) {
 							terrainGrid [x - 1, z] += 1;
-						}if (valz1 != int.MinValue && valz1 < maxHeight && valz1 + maxStep > curVal) {
+						}if (valz1 != int.MinValue && valz1 < maxHeight && valz1 + redistributeThreshold > curVal) {
 							terrainGrid [x, z + 1] += 1;
-						}if (valzNeg1 != int.MinValue && valzNeg1 < maxHeight && valzNeg1 + maxStep > curVal) {
+						}if (valzNeg1 != int.MinValue && valzNeg1 < maxHeight && valzNeg1 + redistributeThreshold > curVal) {
 							terrainGrid [x, z - 1] += 1;
 						}
 
