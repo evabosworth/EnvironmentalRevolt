@@ -15,74 +15,47 @@ public class Movement : MonoBehaviour
     private Vector3 target;
     private int targetCount = 0;
     private bool keepMoving = true;
+    public Vector3 force;
+
 
     // Use this for initialization
     void Start()
     {
         position = gameObject.GetComponent<Rigidbody>().position;
-        targets.Add(position);
-        targets.Add(position);
-        targets.Add(position);
+        targets = new List<Vector3>();
+        targets.Add(new Vector3(position.x,position.y+.75f,position.z));
     }
 
     void Update()
     {
-        position = gameObject.GetComponent<Rigidbody>().position;
-        if (Input.GetMouseButtonDown(0))
-        {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, 100))
-            {
-                // whatever tag you are looking for on your game object
-                if (hit.collider.tag == "Terrain")
-                {
-                    if (hit.transform.position.y + .75 == position.y)
-                    {
-                        targets.Add(new Vector3(hit.transform.position.x, position.y, position.z));
-                        targets.Add(new Vector3(hit.transform.position.x, position.y, hit.transform.position.z));
-                        keepMoving = true;
-                    }
-                    else
-                    {
-                        targets.Add(new Vector3(hit.transform.position.x, position.y, position.z));
-                        targets.Add(new Vector3(hit.transform.position.x, position.y, hit.transform.position.z - 1));
-                        targets.Add(new Vector3(hit.transform.position.x, hit.transform.position.y + .75f, hit.transform.position.z - 1));
-                        targets.Add(new Vector3(hit.transform.position.x, hit.transform.position.y + .75f, hit.transform.position.z));
-                        keepMoving = true;
-                    }
-                }
-            }
-        }
+      
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        position = gameObject.GetComponent<Rigidbody>().position;
-        if (targets.Count.Equals(targetCount))
+        if(targets.Count != 0)
         {
-            keepMoving = false;
-        }
-        if (keepMoving == true)
-        {
+            position = gameObject.GetComponent<Rigidbody>().position;
             target = targets[targetCount];
+            //target.y -= .75f;
             Vector3 dist = target - position;
             if (dist.magnitude < .01f)
             {
-                //Reached Target, go to next target
-                targetCount++;
-                target = targets[targetCount];
+                targets.RemoveAt(targetCount);
             }
             // calc a target vel proportional to distance (clamped to maxVel)
             Vector3 tgtVel = Vector3.ClampMagnitude(toVel * dist, maxVel);
             // calculate the velocity error
             Vector3 error = tgtVel - gameObject.GetComponent<Rigidbody>().velocity;
             // calc a force proportional to the error (clamped to maxForce)
-            Vector3 force = Vector3.ClampMagnitude(gain * error, maxForce);
+            force = Vector3.ClampMagnitude(gain * error, maxForce);
             gameObject.GetComponent<Rigidbody>().AddForce(force);
-
+        }
+        else
+        {
+            gameObject.GetComponent<Rigidbody>().angularVelocity = new Vector3(0,0,0);
+            gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
         }
     }
 

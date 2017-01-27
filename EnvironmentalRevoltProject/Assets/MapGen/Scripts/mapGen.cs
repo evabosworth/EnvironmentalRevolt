@@ -6,11 +6,11 @@ public class mapGen : MonoBehaviour {
 
 	//Starting with plains with light hills, so few particles, low max height
 	public GameObject terrain;
-	int[,] terrainGrid;
+	public int[,] terrainGrid;
 
 
-	int xSize = 50;
-	int zSize = 50;
+	public int xSize = 50;
+	public int zSize = 50;
 	int maxHeight = 5;
 	//0 or 1 creates hills, 3,4 creates canyons
 	int redistributeThreshold = 1; //height can only change on level at a time, not sure what this does anymore
