@@ -13,17 +13,17 @@ public class mapGen : MonoBehaviour {
 	public int zSize = 50;
 	int maxHeight = 5;
 	//0 or 1 creates hills, 3,4 creates canyons
-	int redistributeThreshold = 1; //height can only change on level at a time, not sure what this does anymore
+	int redistributeThreshold = 3; //height can only change on level at a time, not sure what this does anymore
 	int stepSize = 1;
 	int passes = 5;
 	int neighborPasses = 3;
-	int numParticleStarts = 10;
-	int numParticleSteps = 500;
+	int numParticleStarts = 20;
+	int numParticleSteps = 250;
 
 	// Use this for initialization
 	void Start () {
-		int seed = 12;
-		Random.InitState (seed);
+		//int seed = 12;
+		//Random.InitState (seed);
 
 		float startTime = Time.realtimeSinceStartup;
 		print ("start: " + startTime);
