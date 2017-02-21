@@ -11,14 +11,14 @@ public class mapGen : MonoBehaviour {
 
 	public int xSize = 50;
 	public int zSize = 50;
-	int maxHeight = 5;
+	public int maxHeight = 5;
 	//0 or 1 creates hills, 3,4 creates canyons
-	int redistributeThreshold = 3; //height can only change on level at a time, not sure what this does anymore
-	int stepSize = 1;
-	int passes = 5;
-	int neighborPasses = 3;
-	int numParticleStarts = 20;
-	int numParticleSteps = 250;
+	public int redistributeThreshold = 1; //height can only change on level at a time, not sure what this does anymore
+	public int stepSize = 1;
+	public int passes = 5;
+	public int neighborPasses = 3;
+	public int numParticleStarts = 20;
+	public int numParticleSteps = 250;
 
 	// Use this for initialization
 	void Start () {
@@ -46,7 +46,7 @@ public class mapGen : MonoBehaviour {
 
 		float postAlgorithm = Time.realtimeSinceStartup;
 		print ("post-algorithm, pre-visual: " + (postAlgorithm- preAlgorithm));
-		createTerrainGrid ();
+		StartCoroutine ("createTerrainGrid");
 		float postTerrain = Time.realtimeSinceStartup;
 		print ("post-Terrain" + (postTerrain - postAlgorithm));
 
@@ -214,13 +214,14 @@ public class mapGen : MonoBehaviour {
 		int y = (int)position.y;
 		int z = (int)position.z;
 		GameObject terrainClone = (GameObject)Instantiate (terrain, position, transform.rotation);
-		terrainClone.name = "terrain:x" + x + ":y" + y + ":z" + z; 
+		terrainClone.name = "terrain:x" + x + ":y" + y + ":z" + z;
 	}
 
 	/*
 	 * side effect visualizes the entire terrainGrid after particle depistion and smoothing
 	**/
-	public void createTerrainGrid(){
+	public IEnumerator createTerrainGrid(){
+		int curNum = 0;
 		float y = 0;
 		for (int x = 0; x < xSize; x++) {
 			for (int z = 0; z < zSize; z++) {
@@ -256,6 +257,11 @@ public class mapGen : MonoBehaviour {
 					createTerrain (terrain, new Vector3 (x, y, z));
 				}
 
+				if(curNum >= xSize){
+					yield return new WaitForSeconds(.01f);
+					curNum = 0;
+				}
+				curNum++;
 			}
 		}
 	}
