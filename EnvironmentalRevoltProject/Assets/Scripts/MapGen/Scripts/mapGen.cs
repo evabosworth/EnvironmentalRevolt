@@ -22,6 +22,8 @@ public class mapGen : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		//terrain = new GameObject ();
 		//int seed = 12;
 		//Random.InitState (seed);
 
@@ -51,7 +53,11 @@ public class mapGen : MonoBehaviour {
 		print ("post-Terrain" + (postTerrain - postAlgorithm));
 
 		float total = Time.realtimeSinceStartup - startTime;
-		print ("Total: " + total);  
+		print ("Total: " + total);
+
+
+		//TODO Terrain layout has to be easily accesible,
+		//currently held in terrainGrid
 	}
 	
 	// Update is called once per frame
@@ -214,7 +220,9 @@ public class mapGen : MonoBehaviour {
 		int y = (int)position.y;
 		int z = (int)position.z;
 		GameObject terrainClone = (GameObject)Instantiate (terrain, position, transform.rotation);
+
 		terrainClone.name = "terrain:x" + x + ":y" + y + ":z" + z;
+		terrainClone.transform.SetParent(this.transform);
 	}
 
 	/*
@@ -255,6 +263,7 @@ public class mapGen : MonoBehaviour {
 				for (int fillPos = lowest; fillPos < curVal; fillPos++) {
 					y = fillPos*0.5f;
 					createTerrain (terrain, new Vector3 (x, y, z));
+
 				}
 
 				if(curNum >= xSize){
