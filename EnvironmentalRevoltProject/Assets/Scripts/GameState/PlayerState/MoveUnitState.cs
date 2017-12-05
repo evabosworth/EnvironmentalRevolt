@@ -11,6 +11,11 @@ public class MoveUnitState : ScriptableObject, IPlayerState  {
 	// Use this for initialization
 	GlobalVariables gv;
 
+    public void setUnit(GameObject unit)
+    {
+        //If needed do something
+    }
+
 	public void clickAction(){
 		/*
 		//What to do when the mouse is clicked.
