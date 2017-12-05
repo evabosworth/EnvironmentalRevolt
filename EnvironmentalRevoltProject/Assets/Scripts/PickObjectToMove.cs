@@ -28,6 +28,7 @@ public class PickObjectToMove : MonoBehaviour {
                 // whatever tag you are looking for on your game object
                 if (hit.collider.tag == "Character")
                 {
+					/*
                     System.Console.Out.WriteLine("clicked character");
                     possibleMovements = new List<Node>();
                     lastMove = lastChosen.GetComponent<FindPossibleMovements>();
@@ -36,7 +37,8 @@ public class PickObjectToMove : MonoBehaviour {
                     move.ableToMove = true;
                     lastChosen = hit.rigidbody.gameObject;
                     possibleMovements = move.FindMovements(new Vector3(hit.transform.position.x, hit.transform.position.y-.75f, hit.transform.position.z));
-                }
+					*/
+				}
             }
         }
     }

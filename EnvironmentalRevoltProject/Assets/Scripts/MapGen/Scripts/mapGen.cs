@@ -2,37 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class mapGen : MonoBehaviour {
+public class mapGen : ScriptableObject, IMap {
 
 	//Starting with plains with light hills, so few particles, low max height
-	public GameObject terrain;
+
 	public int[,] terrainGrid;
 
-
-	public int xSize = 50;
-	public int zSize = 50;
-	public int maxHeight = 5;
+	public int xSize;
+	public int zSize;
+	public int maxHeight;
 	//0 or 1 creates hills, 3,4 creates canyons
-	public int redistributeThreshold = 1; //height can only change on level at a time, not sure what this does anymore
-	public int stepSize = 1;
-	public int passes = 5;
-	public int neighborPasses = 3;
-	public int numParticleStarts = 20;
-	public int numParticleSteps = 250;
+	public int redistributeThreshold; //height can only change on level at a time, not sure what this does anymore
+	public int stepSize;
+	public int passes;
+	public int neighborPasses;
+	public int numParticleStarts;
+	public int numParticleSteps;
 
-	// Use this for initialization
-	void Start () {
+	public List<Vector3> runCreateTerrain(int xSize, int zSize, int maxHeight, int redistributeThreshold, int stepSize, int passes, int numParticleStarts, int numParticleSteps){
+		this.xSize = xSize;
+		this.zSize = zSize;
+		this.maxHeight = maxHeight;
+		this.redistributeThreshold = redistributeThreshold;
+		this.stepSize = stepSize;
+		this.passes = passes;
+		this.numParticleStarts = numParticleStarts;
+		this.numParticleSteps = numParticleSteps;
+
 
 		//terrain = new GameObject ();
 		//int seed = 12;
 		//Random.InitState (seed);
 
 		float startTime = Time.realtimeSinceStartup;
-		print ("start: " + startTime);
-		print ("start: 0");
 
 		terrainGrid = new int[xSize, zSize];
-
+			
 		int starts = numParticleStarts;
 		for (int start = 0; start < starts; start++) {
 			int particleChange = 1;
@@ -42,27 +47,13 @@ public class mapGen : MonoBehaviour {
 			particleDeposition (steps, particleChange);
 		}
 
-		float preAlgorithm = Time.realtimeSinceStartup;
-		print ("pre-algorithm: " + (preAlgorithm - startTime));
 		flattenTerrain ();
 
-		float postAlgorithm = Time.realtimeSinceStartup;
-		print ("post-algorithm, pre-visual: " + (postAlgorithm- preAlgorithm));
-		StartCoroutine ("createTerrainGrid");
-		float postTerrain = Time.realtimeSinceStartup;
-		print ("post-Terrain" + (postTerrain - postAlgorithm));
+		List<Vector3> returnGrid = createTerrainGrid (terrainGrid);
 
-		float total = Time.realtimeSinceStartup - startTime;
-		print ("Total: " + total);
-
-
+		return returnGrid;
 		//TODO Terrain layout has to be easily accesible,
 		//currently held in terrainGrid
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
 	private void flattenTerrain(){
@@ -122,8 +113,11 @@ public class mapGen : MonoBehaviour {
 	 * uses, maxHeight, Passes
 	**/
 	private void redistributeTerrain(){
-		for (int pass = 0; pass < passes; pass++) {
+		bool insideStepSize = false;
+		while (!insideStepSize) { 
+			insideStepSize = true;
 			for (int x = 0; x < xSize; x++) {
+				bool validTerrain = false;
 				for (int z = 0; z < zSize; z++) {
 					int valx1 = int.MinValue;
 					int valxNeg1 = int.MinValue;
@@ -143,16 +137,39 @@ public class mapGen : MonoBehaviour {
 						valzNeg1 = terrainGrid [x, z - 1];
 					}
 
-					if (terrainGrid [x, z] > 0){ //maxHeight) {
+					if (terrainGrid [x, z] > 0) { //maxHeight) {
 						/* first try, using particle split instead of redistribute*/
 						if (valx1 != int.MinValue && valx1 < maxHeight && valx1 + redistributeThreshold > curVal) {
 							terrainGrid [x + 1, z] += 1;
-						}if (valxNeg1 != int.MinValue && valxNeg1 < maxHeight && valxNeg1 + redistributeThreshold > curVal) {
+							//terrainGrid [x, z]--;
+
+							if(terrainGrid[x,z] <= terrainGrid [x + 1, z] + 2 && terrainGrid[x,z] >= terrainGrid [x + 1, z] - 2){
+								validTerrain = true;
+							}
+						}
+						if (valxNeg1 != int.MinValue && valxNeg1 < maxHeight && valxNeg1 + redistributeThreshold > curVal) {
 							terrainGrid [x - 1, z] += 1;
-						}if (valz1 != int.MinValue && valz1 < maxHeight && valz1 + redistributeThreshold > curVal) {
+							//terrainGrid [x, z]--;
+
+							if(terrainGrid[x,z] <= terrainGrid [x - 1, z] + 2 && terrainGrid[x,z] >= terrainGrid [x - 1, z] - 2){
+								validTerrain = true;
+							}
+						}
+						if (valz1 != int.MinValue && valz1 < maxHeight && valz1 + redistributeThreshold > curVal) {
 							terrainGrid [x, z + 1] += 1;
-						}if (valzNeg1 != int.MinValue && valzNeg1 < maxHeight && valzNeg1 + redistributeThreshold > curVal) {
+							//terrainGrid [x, z]--;
+
+							if(terrainGrid[x,z] <= terrainGrid [x, z + 1] + 2 && terrainGrid[x,z] >= terrainGrid [x, z + 1] - 2){
+								validTerrain = true;
+							}
+						}
+						if (valzNeg1 != int.MinValue && valzNeg1 < maxHeight && valzNeg1 + redistributeThreshold > curVal) {
 							terrainGrid [x, z - 1] += 1;
+							//terrainGrid [x, z]--;
+
+							if(terrainGrid[x,z] <= terrainGrid [x, z - 1] + 2 && terrainGrid[x,z] >= terrainGrid [x, z - 1] - 2){
+								validTerrain = true;
+							}
 						}
 
 
@@ -162,13 +179,12 @@ public class mapGen : MonoBehaviour {
 						}
 					} 
 
-					if (pass == passes - 1) {
-						if (terrainGrid [x, z] > maxHeight) {
-							terrainGrid [x, z] = maxHeight;
-						}
+					if (terrainGrid [x, z] > maxHeight) {
+						terrainGrid [x, z] = maxHeight;
 					}
 
 				}
+				
 			}
 		}
 	}
@@ -211,30 +227,18 @@ public class mapGen : MonoBehaviour {
 	}
 
 	/*
-	 * Takes in a terrain block (lava, grass, normal, ...) a position and location (for naming) [probably don't need]
-	 * returns void, 
-	 * side effect visually creates a terrain block at position
-	**/
-	private void createTerrain(GameObject terrain, Vector3 position){
-		int x = (int)position.x;
-		int y = (int)position.y;
-		int z = (int)position.z;
-		GameObject terrainClone = (GameObject)Instantiate (terrain, position, transform.rotation);
-
-		terrainClone.name = "terrain:x" + x + ":y" + y + ":z" + z;
-		terrainClone.transform.SetParent(this.transform);
-	}
-
-	/*
 	 * side effect visualizes the entire terrainGrid after particle depistion and smoothing
 	**/
-	public IEnumerator createTerrainGrid(){
-		int curNum = 0;
+	public List<Vector3> createTerrainGrid(int[,] terrainGrid){
 		float y = 0;
+
+		List<Vector3> returnGrid = new List<Vector3> ();
+
 		for (int x = 0; x < xSize; x++) {
 			for (int z = 0; z < zSize; z++) {
-				y = terrainGrid [x, z]*0.5f;
-				createTerrain (terrain, new Vector3 (x, y, z));
+
+				y = terrainGrid [x, z] * 0.5f;
+				returnGrid.Add (new Vector3 (x, y, z));
 				//Check surround for heights, fill in below
 
 				int curVal = terrainGrid [x, z];
@@ -262,16 +266,13 @@ public class mapGen : MonoBehaviour {
 
 				for (int fillPos = lowest; fillPos < curVal; fillPos++) {
 					y = fillPos*0.5f;
-					createTerrain (terrain, new Vector3 (x, y, z));
+
+					returnGrid.Add (new Vector3 (x, y, z));  
+					  
 
 				}
-
-				if(curNum >= xSize){
-					yield return new WaitForSeconds(.01f);
-					curNum = 0;
-				}
-				curNum++;
 			}
 		}
+		return returnGrid;
 	}
 }

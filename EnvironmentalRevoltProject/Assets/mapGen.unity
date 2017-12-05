@@ -140,11 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a120b75984d5f2d43ba12615d6e7af16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxMovement: 7
-  possibleMovementTerrains: []
-  ableToMove: 0
-  movementOption: {fileID: 1837102565055068, guid: e4ee0a2221f828f44af1610569e4295e,
-    type: 2}
 --- !u!114 &374395955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,8 +309,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 788320951}
-  - component: {fileID: 788320950}
   - component: {fileID: 788320952}
+  - component: {fileID: 788320953}
+  - component: {fileID: 788320950}
+  - component: {fileID: 788320954}
   m_Layer: 0
   m_Name: mapGen
   m_TagString: Untagged
@@ -331,19 +328,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 788320949}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6acb353b9342a2d4ba5d480dc54693e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 84d46a07c9681b1448419f433e44a778, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   terrain: {fileID: 1451212720406232, guid: def21a2b66657114fbc92996b67157ad, type: 2}
   xSize: 20
   zSize: 20
-  maxHeight: 20
-  redistributeThreshold: 0
+  maxHeight: 5
+  redistributeThreshold: 4
   stepSize: 1
-  passes: 1
-  neighborPasses: 2
-  numParticleStarts: 10
-  numParticleSteps: 30
+  passes: 5
+  neighborPasses: 3
+  numParticleStarts: 5
+  numParticleSteps: 50
 --- !u!4 &788320951
 Transform:
   m_ObjectHideFlags: 0
@@ -365,12 +362,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 788320949}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b76f3a6a87461341b885b89523b7d31, type: 3}
+  m_Script: {fileID: 11500000, guid: 245cab4b9b13ddf4e988695ba9b37393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lastChosen: {fileID: 374395953}
-  lastMove: {fileID: 0}
-  move: {fileID: 0}
+--- !u!114 &788320953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 788320949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 934e70ea21baf644d899bbb522eed70b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DEBUG: 1
+--- !u!114 &788320954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 788320949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da2ab73d5e50b64f8f2827275a951ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &911543265
 GameObject:
   m_ObjectHideFlags: 0
