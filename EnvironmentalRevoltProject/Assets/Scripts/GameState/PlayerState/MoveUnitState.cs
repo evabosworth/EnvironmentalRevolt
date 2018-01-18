@@ -9,46 +9,29 @@ public class MoveUnitState : ScriptableObject, IPlayerState  {
 	public FindPossibleMovements move;
 	public List<Node> possibleMovements;
 	// Use this for initialization
-	GlobalVariables gv;
+	private GlobalVariables gv;
 
-	public void clickAction(){
-		/*
-		//What to do when the mouse is clicked.
-		//probably require raycasts.
-		possibleMovements = new List<Node>();
+	public IPlayerState clickAction(RaycastHit hit){
+		gv = GlobalVariables.getInstance ();
+		// whatever tag you are looking for on your game object
+		if (hit.collider.tag == "Character") {
+			gv.log ("Character Clicked");
 
-		gv = FindObjectOfType<GlobalVariables>();
-		lastMove = new FindPossibleMovements ();
+			/*
+			possibleMovements = new List<Node>();
+			lastMove = lastChosen.GetComponent<FindPossibleMovements>();
+			lastMove.ableToMove = false; 
+			move = hit.collider.gameObject.GetComponent<FindPossibleMovements>();
+			move.ableToMove = true;
+			lastChosen = hit.rigidbody.gameObject;
+			possibleMovements = move.FindMovements(new Vector3(hit.transform.position.x, hit.transform.position.y-.75f, hit.transform.position.z));
+			*/
+		} //Add else ifs as needed for each tag you are looking for
 
-		if (Input.GetMouseButtonDown(0))
-		{
-			var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
+		return missedClickAction ();
+	}
 
-			if (Physics.Raycast(ray, out hit, 100))
-			{
-
-				// whatever tag you are looking for on your game object
-				if (hit.collider.tag == "Character")
-				{
-
-
-					if (gv.DEBUG) {
-						System.Console.Out.WriteLine ("clicked character for movement");
-					}
-
-					possibleMovements = new List<Node>();
-					lastMove = lastChosen.GetComponent<FindPossibleMovements>();
-					lastMove.ableToMove = false; 
-					move = hit.collider.gameObject.GetComponent<FindPossibleMovements>();
-					move.ableToMove = true;
-					lastChosen = hit.rigidbody.gameObject;
-					possibleMovements = move.FindMovements(new Vector3(hit.transform.position.x, hit.transform.position.y-.75f, hit.transform.position.z));
-
-				}
-			}
-		}
-	*/
-
+	public IPlayerState missedClickAction(){
+		return SelectUnitState.CreateInstance<SelectUnitState>();
 	}
 }

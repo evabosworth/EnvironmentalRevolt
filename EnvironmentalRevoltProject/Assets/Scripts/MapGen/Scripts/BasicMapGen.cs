@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * Generates a flat map with no features
+ */
 public class basicMapGen : MonoBehaviour {
 	public GameObject terrain;
 	private int xSize = 30;

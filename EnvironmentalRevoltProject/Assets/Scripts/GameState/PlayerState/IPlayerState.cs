@@ -7,7 +7,10 @@ public interface IPlayerState {
 	/**
 	 * clickAction should hold code for what the player's clicks can do 
 	 */
-	void clickAction();
+	IPlayerState clickAction(RaycastHit hit);
 
-
+	/**
+	 * missedClickAction is called when a click occurs and doesnt hit anything.
+	 */
+	IPlayerState missedClickAction();
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FindPossibleMovements : MonoBehaviour {
-	/*
+	
     public int maxMovement;
     private List<Node> possibleChoices;
     private Node[,] finalChoices;
@@ -179,5 +179,5 @@ public class FindPossibleMovements : MonoBehaviour {
         }
         return path;
     }
-    */
+    
 }

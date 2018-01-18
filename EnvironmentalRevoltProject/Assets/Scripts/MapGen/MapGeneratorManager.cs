@@ -2,6 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+	/**
+	 * Class to manage Maps and map options.
+	 * could also be considered a state?
+	 * 		Really the primiative version of the state
+	 * 		likely wont stay like this
+	 */
 public class MapGeneratorManager : MonoBehaviour
 {
 
@@ -12,7 +18,7 @@ public class MapGeneratorManager : MonoBehaviour
 	public int xSize = 20;
 	public int zSize = 20;
 	public int maxHeight = 5;
-	//0 or 1 creates hills, 3,4 creates canyons
+	//0 or 1 creates hills, 3,4 creates canyons??
 	public int redistributeThreshold = 1; //height can only change on level at a time, not sure what this does anymore
 	public int stepSize = 1;
 	public int passes = 5;
