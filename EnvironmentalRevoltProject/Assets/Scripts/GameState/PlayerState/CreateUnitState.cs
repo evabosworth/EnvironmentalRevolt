@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreateUnitState : ScriptableObject, IPlayerState
+public class CreateUnitState : ScriptableObject
 {
     GameObjectGenerator objectGenerator;
     public GameObject unit;
