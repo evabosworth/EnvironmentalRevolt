@@ -35,9 +35,9 @@ public class GameStateManager: MonoBehaviour
 			RaycastHit hit;
 
 			if (Physics.Raycast (ray, out hit, 100)) {
-				playerState.clickAction (hit);
+				playerState = playerState.clickAction (hit);
 			} else { //clicked in a place where nothing exists. What do?
-				playerState.missedClickAction();
+				playerState = playerState.missedClickAction();
 			}
 		}
 		//close left mouse click
