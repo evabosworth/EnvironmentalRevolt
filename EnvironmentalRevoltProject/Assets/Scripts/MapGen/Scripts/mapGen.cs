@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * The first working version of map gen
+ */
 public class mapGen : ScriptableObject, IMap {
 
 	//Starting with plains with light hills, so few particles, low max height

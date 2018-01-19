@@ -1,0 +1,9 @@
+diff a/EnvironmentalRevoltProject/Assets/mapGen.unity b/EnvironmentalRevoltProject/Assets/mapGen.unity	(rejected hunks)
+@@ -123,6 +123,7 @@
+   - component: {fileID: 374395954}
+   - component: {fileID: 374395960}
+   m_Layer: 0
++  m_Name: Character
+   m_TagString: Character
+   m_Icon: {fileID: 0}
+   m_NavMeshLayer: 0

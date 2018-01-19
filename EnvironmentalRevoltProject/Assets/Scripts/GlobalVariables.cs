@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class GlobalVariables: MonoBehaviour
 {
-	public bool DEBUG = false;
+	public bool DEBUG = true;
+	private static GlobalVariables gv = null;
+
+	public void Start(){
+		gv = this;
+	}
 
 	/* 
 	 * Global helper function to convert a vector 3 into a Node;
@@ -15,6 +20,15 @@ public class GlobalVariables: MonoBehaviour
 		return node;
 	}
 
+	public void log(string message){
+		if (DEBUG) {
+			Debug.Log (message);
+		}
+	}
+
+	public static GlobalVariables getInstance(){
+		return gv;
+	}
 }
 
 

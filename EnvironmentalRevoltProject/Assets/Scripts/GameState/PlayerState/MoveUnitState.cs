@@ -9,51 +9,33 @@ public class MoveUnitState : ScriptableObject, IPlayerState  {
 	public FindPossibleMovements move;
 	public List<Node> possibleMovements;
 	// Use this for initialization
-	GlobalVariables gv;
+	private GlobalVariables gv;
+	private GameObject selectedUnit;
 
-    public void setUnit(GameObject unit)
-    {
-        //If needed do something
-    }
+	public IPlayerState clickAction(RaycastHit hit){
+		gv = GlobalVariables.getInstance ();
 
-	public void clickAction(){
-		/*
-		//What to do when the mouse is clicked.
-		//probably require raycasts.
-		possibleMovements = new List<Node>();
+		// whatever tag you are looking for on your game object
+		if (hit.collider.tag == "Character") {
+			gv.log ("MoveUnitState: Clicked character");
+			
+		} //Add else ifs as needed for each tag you are looking for
 
-		gv = FindObjectOfType<GlobalVariables>();
-		lastMove = new FindPossibleMovements ();
+		return missedClickAction ();
+	}
 
-		if (Input.GetMouseButtonDown(0))
-		{
-			var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
+	public void setSelectedUnit(GameObject selectedUnit){
+		this.selectedUnit = selectedUnit;
+	}
 
-			if (Physics.Raycast(ray, out hit, 100))
-			{
+	public IPlayerState missedClickAction(){
+		gv = GlobalVariables.getInstance ();
+		gv.log ("MoveUnitState: Missed Click");
 
-				// whatever tag you are looking for on your game object
-				if (hit.collider.tag == "Character")
-				{
-
-
-					if (gv.DEBUG) {
-						System.Console.Out.WriteLine ("clicked character for movement");
-					}
-
-					possibleMovements = new List<Node>();
-					lastMove = lastChosen.GetComponent<FindPossibleMovements>();
-					lastMove.ableToMove = false; 
-					move = hit.collider.gameObject.GetComponent<FindPossibleMovements>();
-					move.ableToMove = true;
-					lastChosen = hit.rigidbody.gameObject;
-					possibleMovements = move.FindMovements(new Vector3(hit.transform.position.x, hit.transform.position.y-.75f, hit.transform.position.z));
-
-				}
-			}
-		}
-	*/
-
+		MeshRenderer meshRend = selectedUnit.GetComponent<MeshRenderer> ();
+		Material mat = meshRend.material;
+		Color oldColor = new Color (0.159f, 0.0f, 1.0f, 1.0f);
+		mat.color = oldColor;
+		return SelectUnitState.CreateInstance<SelectUnitState>();
 	}
 }
