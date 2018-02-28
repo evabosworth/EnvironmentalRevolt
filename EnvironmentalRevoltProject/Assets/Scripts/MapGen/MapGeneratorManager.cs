@@ -25,20 +25,30 @@ public class MapGeneratorManager : MonoBehaviour
 	public int neighborPasses = 3;
 	public int numParticleStarts = 2;
 	public int numParticleSteps = 25;
+	GlobalVariables gv;
 
 
 	// Use this for initialization
 	void Start ()
 	{
+		gv = GlobalVariables.getInstance ();
 		objectGenerator = FindObjectOfType<GameObjectGenerator> ();
 		map = mapGen.CreateInstance<mapGen>();
 		List<Vector3> mapList = map.runCreateTerrain (xSize, zSize, maxHeight, redistributeThreshold, stepSize, passes, numParticleStarts, numParticleSteps);
 
+		//Dictionary containing location of a block and info on the block
+		Dictionary<Vector3, GameObject> terrainDictionary = new Dictionary<Vector3, GameObject>();
+
 		foreach (Vector3 position in mapList) {
 			string name = "Terrain; x:" + position.x + ", y:" + position.y + " z:" + position.z;
 
-			objectGenerator.createAndDisplayGameObject (terrain, position, name);
+			GameObject createdTerrain = objectGenerator.createAndDisplayGameObject (terrain, position, name);
+
+			terrainDictionary.Add (position, createdTerrain);
+
 		}
+		if(gv != null)
+			gv.terrainDictionary = terrainDictionary;
 	}
 	
 	// Update is called once per frame

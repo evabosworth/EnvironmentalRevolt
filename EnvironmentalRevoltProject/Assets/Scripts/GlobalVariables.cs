@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class GlobalVariables: MonoBehaviour
 {
-	public bool DEBUG = true;
 	private static GlobalVariables gv = null;
+
+	public bool DEBUG = true;
+	public Dictionary<Vector3, GameObject> terrainDictionary;
 
 	public void Start(){
 		gv = this;

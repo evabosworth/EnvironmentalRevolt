@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectUnitState : ScriptableObject,IPlayerState{
+public class SelectUnitState : IPlayerState{
 
 	// Use this for initialization
 	private GlobalVariables gv;
 
 
-	public IPlayerState clickAction(RaycastHit hit){
+	public override IPlayerState clickAction(RaycastHit hit){
 		gv = GlobalVariables.getInstance ();
 		// whatever tag you are looking for on your game object
 		if (hit.collider.tag == "Character") {
-			gv.log ("SelectUnitState: Character Clicked");
+			gv.log ("SelectUnitState: Character Clicked -> MoveUniteState");
 			GameObject character = hit.collider.gameObject;
 			//On select change color
 
@@ -26,14 +26,15 @@ public class SelectUnitState : ScriptableObject,IPlayerState{
 			MoveUnitState moveUnitState = MoveUnitState.CreateInstance<MoveUnitState>();
 			moveUnitState.setSelectedUnit (character);
 
-			return moveUnitState;
+			return moveUnitState.clickAction(hit);
 		} //Add else ifs as needed for each tag you are looking for
 
 		return missedClickAction ();
 	}
 
-	public IPlayerState missedClickAction(){
-		gv.log ("SelectUnitState: Missed Click");
+	public override IPlayerState missedClickAction(){
+		gv = GlobalVariables.getInstance ();
+		gv.log ("SelectUnitState: Missed Click -> SelectUnitState");
 
 		return this;
 	}

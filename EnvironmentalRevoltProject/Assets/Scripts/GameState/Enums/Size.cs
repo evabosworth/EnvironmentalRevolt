@@ -4,13 +4,13 @@
 public static class Size{
 	public enum Sizes
 	{
-		tiny,
-		small,
-		medium,
-		large,
-		huge,
-		giagantic,
-		colossal
+		TINY,
+		SMALL,
+		MEDIUM,
+		LARGE,
+		HUGR,
+		GIGANTIC,
+		COLOSSOL
 	}
 
 	public static Sizes breed(Sizes mother, Sizes father){

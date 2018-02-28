@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IPlayerState {
+public abstract class IPlayerState: ScriptableObject {
 
 	/**
 	 * clickAction should hold code for what the player's clicks can do 
 	 */
-	IPlayerState clickAction(RaycastHit hit);
+	public virtual IPlayerState clickAction(RaycastHit hit){
+		return this;
+	}
 
 	/**
 	 * missedClickAction is called when a click occurs and doesnt hit anything.
 	 */
-	IPlayerState missedClickAction();
+	public virtual IPlayerState missedClickAction(){
+		return this;
+	}
 }

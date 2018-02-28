@@ -3,23 +3,34 @@ using System.Collections;
 
 public class GameObjectGenerator : MonoBehaviour
 {
+	public GameObject sphere;
+	GlobalVariables gv;
 
-	// Use this for initialization
-	void Start ()
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
+	public void Start(){
+		gv = FindObjectOfType<GlobalVariables> ();
+
 	}
 
-	public void createAndDisplayGameObject(GameObject terrain, Vector3 position, string name){
-		GameObject terrainClone = (GameObject)Instantiate (terrain, position, transform.rotation);
+	public GameObject createAndDisplayGameObject(IObject noneGameObject){
+		GameObject objectClone = null;
+		if (noneGameObject.prefabName == PrefabObject.PrefabIdentifier.SPHERE) {
+			objectClone = (GameObject)Instantiate (sphere, noneGameObject.position, Quaternion.identity);
+		}
+		gameObject.transform.SetParent (this.transform);
+
+		return objectClone;
+	}
+
+
+	/**
+	 * TOOD: change terrain to a class that contians a gameobject terrain, maybe??? probably, yeah... maybe
+	 */
+	public GameObject createAndDisplayGameObject(GameObject gameObject, Vector3 position, string name){
+		GameObject terrainClone = (GameObject)Instantiate (gameObject, position, transform.rotation);
 		terrainClone.transform.SetParent(this.transform); 
 		terrainClone.name = name;
+	
+		return terrainClone;
 	}
 }
 

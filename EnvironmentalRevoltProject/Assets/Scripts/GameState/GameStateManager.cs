@@ -8,18 +8,19 @@ using UnityEngine;
 public class GameStateManager: MonoBehaviour
 {
 	IPlayerState playerState;
-	public GameObject lastChosen;
-	public FindPossibleMovements lastMove;
-	public FindPossibleMovements move;
-	public List<Node> possibleMovements;
+	GameObject lastChosen;
+	FindPossibleMovements lastMove;
+	FindPossibleMovements move;
+	List<Node> possibleMovements;
 	// Use this for initialization
-	public GlobalVariables gv;
+	GlobalVariables gv;
 
 
 
 	public void Start(){
 
-		playerState = MoveUnitState.CreateInstance<SelectUnitState>();
+		playerState = CreateUnitState.CreateInstance<CreateUnitState>();
+
 		gv = FindObjectOfType<GlobalVariables> ();
 	}
 

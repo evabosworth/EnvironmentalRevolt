@@ -7,6 +7,7 @@ TagManager:
   - Terrain
   - Character
   - MovementOption
+  - Obstacle
   layers:
   - Default
   - TransparentFX
