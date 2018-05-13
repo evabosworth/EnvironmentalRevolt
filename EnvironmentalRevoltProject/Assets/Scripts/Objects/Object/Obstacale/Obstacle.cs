@@ -1,17 +1,16 @@
-﻿using System.Collections;
+﻿	using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Obstacle : IObject
 {
 
-	public override void updateInfo(string DisplayName, string UniqueName, Vector3 position)
+	public Obstacle(GameObject gameObject, string displayName, string uniqueName, Vector3 position) : base(gameObject, displayName, uniqueName, position)
 	{
-		this.DisplayName = DisplayName;
-		this.UniqueName = UniqueName;
-		this.movement = NoMovement.CreateInstance<NoMovement> ();
-		this.prefabName = PrefabObject.PrefabIdentifier.SPHERE;
-		this.position = position;
+
+		this.movement = new BasicMovement (5, 2);
+
+
 	}
 }
 

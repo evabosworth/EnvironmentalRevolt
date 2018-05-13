@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class IObject: ScriptableObject {
-	public string DisplayName;
-	public string UniqueName;
+	public GameObject gameObject;
+	public string displayName;
+	public string uniqueName;
 	public IMovement movement;
-	public PrefabObject.PrefabIdentifier prefabName;
 	public Vector3 position;
+	public Vector3 origPosition; //For when moved, but not a new turn.
 
 
-	public abstract void updateInfo (string DisplayName, string UniqueName, Vector3 pos);
+	public IObject (GameObject gameObject, string displayName, string UniqueName, Vector3 position){
+		this.gameObject = gameObject;
+		this.displayName = displayName;
+		this.uniqueName = UniqueName;
+		this.position = position;
+		this.origPosition = position;
+	}
 }
 

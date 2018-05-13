@@ -4,10 +4,11 @@
 public static class PrefabObject{
 	public enum PrefabIdentifier
 	{
-		SPHERE
+		SPHERE,
+		BASICTERRAIN
 	}
 
-	public static PrefabIdentifier breed(PrefabIdentifier mother, PrefabIdentifier father){
+	public static PrefabIdentifier breed(IObject mother, IObject father){
 		return PrefabIdentifier.SPHERE;
 	}
 }

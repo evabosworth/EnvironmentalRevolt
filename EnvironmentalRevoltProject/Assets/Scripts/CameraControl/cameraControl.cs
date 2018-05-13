@@ -8,26 +8,17 @@ public class cameraControl : MonoBehaviour {
 	float zoomSpeed = 1.0f;
 	 
 	public Transform target;
-	public float smoothTime = 0.0f;
-	float maxSpeed = 1.0f;
-
+	public float smoothTime = 0.50f;
+	float maxSpeed = 0.125f;
+	private bool lockRotate = false;
 
 	// Use this for initialization
 	void Start () {
 		target = gameObject.transform;
 	
-		InvokeRepeating ("Rotate", 0.0f, 0.5f);
 	}
 
-	void Rotate(){
 
-		if (Input.GetAxis ("Rotate") > 0) {
-			transform.Rotate (new Vector3 (0, 90, 0));
-		} else if (Input.GetAxis ("Rotate") < 0) {
-			transform.Rotate (new Vector3 (0, -90, 0));
-		}
-	}
-	
 	// Update is called once per frame
 	void Update () {
 
@@ -44,7 +35,27 @@ public class cameraControl : MonoBehaviour {
 			transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
 
 		} 
+			
+		if (Input.GetButtonUp ("Rotate")) {
+			lockRotate = false;
+		}
 
+		if (!lockRotate) {
+			Transform from = transform;
+			Transform to = transform;
+			float rotateSpeed = 0.01f;
+			if (Input.GetAxis ("Rotate") > 0) {
+				//transform.Rotate (new Vector3 (0, 45, 0));
+				to.Rotate (new Vector3 (0, 45, 0));
+				transform.rotation = Quaternion.Lerp(from.rotation, to.rotation, Time.time * rotateSpeed);
+				lockRotate = true;
+			} else if (Input.GetAxis ("Rotate") < 0) {
+				//transform.Rotate (new Vector3 (0, -45, 0));
+				to.Rotate (new Vector3 (0, -45, 0));
+				transform.rotation = Quaternion.Lerp(from.rotation, to.rotation, Time.time * rotateSpeed);
+				lockRotate = true;
+			}
+		}
 
 		if (Input.GetAxis ("Vertical") > 0) {
 			Vector3 velocity = Vector3.zero;    

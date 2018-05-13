@@ -12,8 +12,7 @@ public class MapGeneratorManager : MonoBehaviour
 {
 
 	IMap map;
-	GameObjectGenerator objectGenerator;
-	public GameObject terrain;
+	GameObjectController objectController;
 
 	public int xSize = 20;
 	public int zSize = 20;
@@ -26,29 +25,40 @@ public class MapGeneratorManager : MonoBehaviour
 	public int numParticleStarts = 2;
 	public int numParticleSteps = 25;
 	GlobalVariables gv;
+	DisplayObjects displayObjects;
 
 
 	// Use this for initialization
 	void Start ()
 	{
 		gv = GlobalVariables.getInstance ();
-		objectGenerator = FindObjectOfType<GameObjectGenerator> ();
+		displayObjects = DisplayObjects.getInstance ();
+		gv.mapXSize = xSize;
+		gv.mapZSize = zSize;
+
+		objectController = FindObjectOfType<GameObjectController> ();
 		map = mapGen.CreateInstance<mapGen>();
-		List<Vector3> mapList = map.runCreateTerrain (xSize, zSize, maxHeight, redistributeThreshold, stepSize, passes, numParticleStarts, numParticleSteps);
+		List<Vector3> battlefieldGrid = map.runCreateTerrain (xSize, zSize, maxHeight, redistributeThreshold, stepSize, passes, numParticleStarts, numParticleSteps);
 
 		//Dictionary containing location of a block and info on the block
-		Dictionary<Vector3, GameObject> terrainDictionary = new Dictionary<Vector3, GameObject>();
+		Dictionary<Vector3, IObject> terrainDictionary = new Dictionary<Vector3, IObject>();
 
-		foreach (Vector3 position in mapList) {
+		foreach (Vector3 position in battlefieldGrid) {
 			string name = "Terrain; x:" + position.x + ", y:" + position.y + " z:" + position.z;
+			IObject terrain = new BasicTerrainBlock (displayObjects.basicTerrainDisplayObject, "Terrain", name, position);
 
-			GameObject createdTerrain = objectGenerator.createAndDisplayGameObject (terrain, position, name);
+			GameObject createdTerrain = objectController.createAndDisplayGameObject (terrain);
+			terrain.gameObject = createdTerrain;
 
-			terrainDictionary.Add (position, createdTerrain);
+			terrainDictionary.Add (position, terrain);
 
 		}
+		Battlefield battlefield = Battlefield.CreateInstance<Battlefield> ();
+		battlefield.setDictionary(terrainDictionary);
+
+
 		if(gv != null)
-			gv.terrainDictionary = terrainDictionary;
+			gv.battlefield = battlefield;
 	}
 	
 	// Update is called once per frame

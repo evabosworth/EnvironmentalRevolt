@@ -3,15 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public abstract class IMovement : ScriptableObject    
+public interface IMovement
 { 
-	List<Node> findPossibleMovement (Node startNode){
-
-		GlobalVariables gv = FindObjectOfType<GlobalVariables>();
-
-		return null;
-	
-	}
+	List<Vector3> findPossibleMovement (Vector3 startPos);
 
 
 }

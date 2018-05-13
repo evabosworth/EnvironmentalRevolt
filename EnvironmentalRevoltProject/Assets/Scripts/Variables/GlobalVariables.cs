@@ -7,11 +7,18 @@ public class GlobalVariables: MonoBehaviour
 	private static GlobalVariables gv = null;
 
 	public bool DEBUG = true;
-	public Dictionary<Vector3, GameObject> terrainDictionary;
 
-	public void Start(){
+	public Battlefield battlefield;
+
+	private GlobalVariables(){
 		gv = this;
 	}
+
+
+	public float unitHeightModifier = 0.75f;
+	public float basicTerrainHeight = 0.50f;
+	public float mapXSize = 20;
+	public float mapZSize = 20;
 
 	/* 
 	 * Global helper function to convert a vector 3 into a Node;
@@ -29,8 +36,12 @@ public class GlobalVariables: MonoBehaviour
 	}
 
 	public static GlobalVariables getInstance(){
+		if (gv == null) {
+			gv = new GlobalVariables ();
+		}
 		return gv;
 	}
+
 }
 
 

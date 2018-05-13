@@ -17,4 +17,25 @@ public abstract class IPlayerState: ScriptableObject {
 	public virtual IPlayerState missedClickAction(){
 		return this;
 	}
+
+	/**
+	 * manuallyAdvanceStage function that advances to a set next stage on default enter key;
+	 */
+	public virtual IPlayerState manuallyAdvanceStage(){
+		return this;
+	}
+
+	/**
+	 * MouseOver function that takes in any hits of raycasts 
+	 */
+	public virtual IPlayerState mouseOver(RaycastHit hit){
+		return this;
+	}
+
+	/**
+	 * missedMouseOverAction for when the moiuse over hits nothing
+	 */
+	public virtual IPlayerState missedMouseOverAction(){
+		return this;
+	}
 }

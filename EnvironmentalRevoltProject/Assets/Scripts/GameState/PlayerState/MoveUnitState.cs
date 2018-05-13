@@ -4,82 +4,85 @@ using UnityEngine;
 
 public class MoveUnitState : IPlayerState  {
 
-	public GameObject lastChosen;
 	public FindPossibleMovements lastMove;
 	public FindPossibleMovements move;
 	public List<Node> possibleMovements;
-	// Use this for initialization
+	GameObjectController objectController = null;
 	private GlobalVariables gv;
-	private GameObject selectedObject = null;
+	public static GameObject highlightedUnit = null;
+	public static IObject unit = null;
+	public static List<IObject> highlightedTerrain = new List<IObject> ();
 
 
 	public override IPlayerState clickAction(RaycastHit hit){
 		gv = GlobalVariables.getInstance ();
-
-		Vector3 unitPos = selectedObject.transform.position;
-
+		objectController = FindObjectOfType<GameObjectController>();
 		// whatever tag you are looking for on your game object
 		if (hit.collider.tag == "Character") {
-			gv.log ("MoveUnitState: Clicked character -> MoveUnitState");
+			gv.log ("SelectUnitState: Character Clicked -> MoveUniteState");
+			GameObject hitObject = hit.collider.gameObject;
 
-			GameObject character = hit.collider.gameObject;
-			//On select change color
+			if (!hitObject.Equals (highlightedUnit)) {
+				//Remove old unit highlighting
+				removeHighlights(highlightedUnit);
 
-			MeshRenderer meshRend = character.GetComponent<MeshRenderer> ();
-			Material mat = meshRend.material;
+				objectController.changeHighlighting (hitObject, "BasicHighlighting", true);
+				//update what unit is higlighted
+				highlightedUnit = hitObject;
 
-			Color newColor = new Color (1.159f, 0.0f, 1.0f, 1.0f);
-			gv.log(mat.color.ToString());
-			mat.color = newColor;
+				gv.battlefield.unitDictionary.TryGetValue(hitObject.transform.position, out unit);
 
-			MoveUnitState moveUnitState = MoveUnitState.CreateInstance<MoveUnitState>();
+				Vector3 unitTerrainPos = unit.origPosition;
+				unitTerrainPos.y -= gv.unitHeightModifier;
 
-			if (selectedObject == null || selectedObject.transform.name != character.transform.name) {
-				deselectUnit ();
-				moveUnitState.setSelectedUnit (character);
-				gv.log ("MoveUnitState: Clicked new character -> MoveUnitState");
+				List<Vector3> possibleMovement = unit.movement.findPossibleMovement (unitTerrainPos);
+				List<IObject> movementObjects = gv.battlefield.convertListPosToListObject (possibleMovement);
+
+				//remove Old movement highlighting
+				objectController.removeHighlight (highlightedTerrain, "MovementHighlighting");
+				objectController.highlightAll (movementObjects, "MovementHighlighting");
+				//update what terrain is highlighted
+				highlightedTerrain = movementObjects;
+
+
 			}
-
 			return this;
-		} else if(hit.collider.tag == "Terrain"){
-			gv.log ("MoveUnitState: Terrain -> MoveUnitState");
+		} else if(hit.collider.tag == "Terrain") {
+			gv.log ("SelectUnitState: Terrain Clicked -> MoveUniteState");
+			GameObject hitTerrain = hit.collider.gameObject;
 
-			Vector3 playPos = selectedObject.transform.position;
-
-			GameObject terrain = hit.collider.gameObject;
-
-			gv.log (terrain.transform.position.ToString ());
+			IObject terrainCode; 
+			gv.battlefield.terrainDictionary.TryGetValue (hitTerrain.transform.position, out terrainCode);
 
 
-
-			return this;
+			if (terrainCode != null && highlightedTerrain.Contains (terrainCode)) {
+				if (unit != null) {
+					gv.battlefield.moveUnit (unit, terrainCode.position);
+				}
+			}
+			
 		}//Add else ifs as needed for each tag you are looking for
 
 		return missedClickAction ();
 	}
 
-	public void setSelectedUnit(GameObject selectedUnit){
-		this.selectedObject = selectedUnit;
-	}
-
-	private void deselectUnit(){
-		if (selectedObject != null) {
-			MeshRenderer meshRend = selectedObject.GetComponent<MeshRenderer> ();
-			Material mat = meshRend.material;
-			Color oldColor = new Color (0.159f, 0.0f, 1.0f, 1.0f);
-			mat.color = oldColor;
-
+	private void removeHighlights(GameObject gameObject){
+		if (highlightedUnit == null) {
+			return;
 		}
 
+		objectController.changeHighlighting (gameObject, "BasicHighlighting", false);
+		objectController.changeHighlighting (gameObject, "InvalidHighlighting", false);
+		highlightedUnit = null;
 
-		selectedObject = null;
 	}
 
 	public override IPlayerState missedClickAction(){
 		gv = GlobalVariables.getInstance ();
 		gv.log ("MoveUnitState: Missed Click -> SelectUnitState");
 
-		deselectUnit ();
+		removeHighlights (highlightedUnit);
+		objectController.removeHighlight (highlightedTerrain, "MovementHighlighting");
 
 		return SelectUnitState.CreateInstance<SelectUnitState>();
 	}

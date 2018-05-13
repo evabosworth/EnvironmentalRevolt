@@ -5,26 +5,28 @@ using UnityEngine;
 public class SelectUnitState : IPlayerState{
 
 	// Use this for initialization
+	GameObjectController objectController = null;
 	private GlobalVariables gv;
+	public static GameObject highlightObject = null;
 
 
 	public override IPlayerState clickAction(RaycastHit hit){
 		gv = GlobalVariables.getInstance ();
 		// whatever tag you are looking for on your game object
 		if (hit.collider.tag == "Character") {
+			objectController = FindObjectOfType<GameObjectController>();
 			gv.log ("SelectUnitState: Character Clicked -> MoveUniteState");
-			GameObject character = hit.collider.gameObject;
-			//On select change color
+			GameObject hitObject = hit.collider.gameObject;
 
-			MeshRenderer meshRend = character.GetComponent<MeshRenderer> ();
-			Material mat = meshRend.material;
+			if (!hitObject.Equals (highlightObject)) {
+				removeHighlights(highlightObject);
+			}
 
-			Color newColor = new Color (1.159f, 0.0f, 1.0f, 1.0f);
-			gv.log(mat.color.ToString());
-			mat.color = newColor;
+
+			objectController.changeHighlighting (hitObject, "BasicHighlighting", true);
+			highlightObject = hitObject;
 
 			MoveUnitState moveUnitState = MoveUnitState.CreateInstance<MoveUnitState>();
-			moveUnitState.setSelectedUnit (character);
 
 			return moveUnitState.clickAction(hit);
 		} //Add else ifs as needed for each tag you are looking for
@@ -32,11 +34,15 @@ public class SelectUnitState : IPlayerState{
 		return missedClickAction ();
 	}
 
-	public override IPlayerState missedClickAction(){
-		gv = GlobalVariables.getInstance ();
-		gv.log ("SelectUnitState: Missed Click -> SelectUnitState");
+	private void removeHighlights(GameObject gameObject){
+		if (highlightObject == null) {
+			return;
+		}
 
-		return this;
+		objectController.changeHighlighting (gameObject, "BasicHighlighting", false);
+		objectController.changeHighlighting (gameObject, "InvalidHighlighting", false);
+		highlightObject = null;
+
 	}
 }
 

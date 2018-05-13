@@ -22,7 +22,10 @@ public class mapGen : ScriptableObject, IMap {
 	public int numParticleStarts;
 	public int numParticleSteps;
 
+
+	//TODO return as a battlefield
 	public List<Vector3> runCreateTerrain(int xSize, int zSize, int maxHeight, int redistributeThreshold, int stepSize, int passes, int numParticleStarts, int numParticleSteps){
+
 		this.xSize = xSize;
 		this.zSize = zSize;
 		this.maxHeight = maxHeight;
@@ -54,9 +57,8 @@ public class mapGen : ScriptableObject, IMap {
 
 		List<Vector3> returnGrid = createTerrainGrid (terrainGrid);
 
+
 		return returnGrid;
-		//TODO Terrain layout has to be easily accesible,
-		//currently held in terrainGrid
 	}
 
 	private void flattenTerrain(){
