@@ -22,34 +22,39 @@ public class GameObjectController : MonoBehaviour
 		return objectClone;
 	}
 
-	public void highlightAll(List<IObject> codeObjects, string highlightName){
+	public void addHighlights(List<IObject> codeObjects, string highlightName){
 
 		foreach (IObject codeObject in codeObjects) {
 			GameObject builtGameObject = GameObject.Find (codeObject.uniqueName);
-			changeHighlighting(codeObject.gameObject, highlightName, true);
+			changeHighlight(codeObject, highlightName, true);
 
 
 		}
 	}
 
-	public void removeHighlight(List<IObject> codeObjects, string highlightName){
+	public void removeHighlights(List<IObject> codeObjects, string highlightName){
 
 		foreach (IObject codeObject in codeObjects) {
 			GameObject builtGameObject = GameObject.Find (codeObject.uniqueName);
-			changeHighlighting(codeObject.gameObject, highlightName, false);
+			changeHighlight(codeObject, highlightName, false);
 
 
 		}
 	}
 
-	public void changeHighlighting(GameObject gamePiece, string searchName, bool active){
+	public void changeHighlight(IObject gamePiece, string searchName, bool active){
+
 
 		if (gamePiece != null) {
-			Transform gameTransform = gamePiece.transform.Find (searchName);
+			GameObject builtGameObject = GameObject.Find (gamePiece.uniqueName);
+			Transform gameTransform = builtGameObject.gameObject.transform.Find (searchName);
 			if (gameTransform != null) {
-				gameTransform.gameObject.SetActive(active);
+				gameTransform.gameObject.SetActive (active);
+				gamePiece.gameObject = builtGameObject;
 			}
-		}	
+
+		}
+
 	}
 
 	public void moveObject(IObject codeObject, Vector3 toPos){

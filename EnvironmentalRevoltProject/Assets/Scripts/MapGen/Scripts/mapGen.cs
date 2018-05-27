@@ -5,7 +5,7 @@ using UnityEngine;
 /**
  * The first working version of map gen
  */
-public class mapGen : ScriptableObject, IMap {
+public class mapGen  {
 
 	//Starting with plains with light hills, so few particles, low max height
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class IPlayerState: ScriptableObject {
+	public IPlayerState previousState = null;
 
 	/**
 	 * clickAction should hold code for what the player's clicks can do 

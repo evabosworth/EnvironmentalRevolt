@@ -7,28 +7,28 @@ public class MoveUnitState : IPlayerState  {
 	public FindPossibleMovements lastMove;
 	public FindPossibleMovements move;
 	public List<Node> possibleMovements;
-	GameObjectController objectController = null;
+
 	private GlobalVariables gv;
-	public static GameObject highlightedUnit = null;
+	public static IObject highlightedUnit = null;
 	public static IObject unit = null;
 	public static List<IObject> highlightedTerrain = new List<IObject> ();
 
 
 	public override IPlayerState clickAction(RaycastHit hit){
 		gv = GlobalVariables.getInstance ();
-		objectController = FindObjectOfType<GameObjectController>();
 		// whatever tag you are looking for on your game object
 		if (hit.collider.tag == "Character") {
 			gv.log ("SelectUnitState: Character Clicked -> MoveUniteState");
 			GameObject hitObject = hit.collider.gameObject;
+			IObject codeHitObject = gv.battlefield.searchBattlefield (hitObject);
 
 			if (!hitObject.Equals (highlightedUnit)) {
 				//Remove old unit highlighting
 				removeHighlights(highlightedUnit);
 
-				objectController.changeHighlighting (hitObject, "BasicHighlighting", true);
+				gv.battlefield.changeHighlight (codeHitObject, "BasicHighlighting", true);
 				//update what unit is higlighted
-				highlightedUnit = hitObject;
+				highlightedUnit = codeHitObject;
 
 				gv.battlefield.unitDictionary.TryGetValue(hitObject.transform.position, out unit);
 
@@ -39,8 +39,8 @@ public class MoveUnitState : IPlayerState  {
 				List<IObject> movementObjects = gv.battlefield.convertListPosToListObject (possibleMovement);
 
 				//remove Old movement highlighting
-				objectController.removeHighlight (highlightedTerrain, "MovementHighlighting");
-				objectController.highlightAll (movementObjects, "MovementHighlighting");
+				gv.battlefield.removeHighlights (highlightedTerrain, "MovementHighlighting");
+				gv.battlefield.addHighlights (movementObjects, "MovementHighlighting");
 				//update what terrain is highlighted
 				highlightedTerrain = movementObjects;
 
@@ -66,13 +66,13 @@ public class MoveUnitState : IPlayerState  {
 		return missedClickAction ();
 	}
 
-	private void removeHighlights(GameObject gameObject){
+	private void removeHighlights(IObject codeObject){
 		if (highlightedUnit == null) {
 			return;
 		}
 
-		objectController.changeHighlighting (gameObject, "BasicHighlighting", false);
-		objectController.changeHighlighting (gameObject, "InvalidHighlighting", false);
+		gv.battlefield.changeHighlight (codeObject, "BasicHighlighting", false);
+		gv.battlefield.changeHighlight (codeObject, "InvalidHighlighting", false);
 		highlightedUnit = null;
 
 	}
@@ -82,7 +82,7 @@ public class MoveUnitState : IPlayerState  {
 		gv.log ("MoveUnitState: Missed Click -> SelectUnitState");
 
 		removeHighlights (highlightedUnit);
-		objectController.removeHighlight (highlightedTerrain, "MovementHighlighting");
+		gv.battlefield.removeHighlights (highlightedTerrain, "MovementHighlighting");
 
 		return SelectUnitState.CreateInstance<SelectUnitState>();
 	}

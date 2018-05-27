@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 65822826999154356}
   - component: {fileID: 23192723324398244}
   m_Layer: 0
-  m_Name: BasicTerrain
+  m_Name: basicTerrain
   m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,7 +100,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1566910150180684}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.1814942, y: -2.6756203, z: -0.7523508}
+  m_LocalPosition: {x: 20.40187, y: -3.2453403, z: -6.5978136}
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_Children:
   - {fileID: 4715309841866598}

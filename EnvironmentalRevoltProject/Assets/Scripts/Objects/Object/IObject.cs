@@ -10,6 +10,9 @@ public abstract class IObject: ScriptableObject {
 	public Vector3 position;
 	public Vector3 origPosition; //For when moved, but not a new turn.
 
+	public IObject(){
+	}
+
 
 	public IObject (GameObject gameObject, string displayName, string UniqueName, Vector3 position){
 		this.gameObject = gameObject;

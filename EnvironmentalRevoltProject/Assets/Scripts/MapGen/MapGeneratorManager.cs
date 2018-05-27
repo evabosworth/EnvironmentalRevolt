@@ -11,19 +11,10 @@ using System.Collections.Generic;
 public class MapGeneratorManager : MonoBehaviour
 {
 
-	IMap map;
 	GameObjectController objectController;
 
 	public int xSize = 20;
 	public int zSize = 20;
-	public int maxHeight = 5;
-	//0 or 1 creates hills, 3,4 creates canyons??
-	public int redistributeThreshold = 1; //height can only change on level at a time, not sure what this does anymore
-	public int stepSize = 1;
-	public int passes = 5;
-	public int neighborPasses = 3;
-	public int numParticleStarts = 2;
-	public int numParticleSteps = 25;
 	GlobalVariables gv;
 	DisplayObjects displayObjects;
 
@@ -37,25 +28,10 @@ public class MapGeneratorManager : MonoBehaviour
 		gv.mapZSize = zSize;
 
 		objectController = FindObjectOfType<GameObjectController> ();
-		map = mapGen.CreateInstance<mapGen>();
-		List<Vector3> battlefieldGrid = map.runCreateTerrain (xSize, zSize, maxHeight, redistributeThreshold, stepSize, passes, numParticleStarts, numParticleSteps);
 
-		//Dictionary containing location of a block and info on the block
-		Dictionary<Vector3, IObject> terrainDictionary = new Dictionary<Vector3, IObject>();
+		IMap mapGen = new BattlefieldGen ();
 
-		foreach (Vector3 position in battlefieldGrid) {
-			string name = "Terrain; x:" + position.x + ", y:" + position.y + " z:" + position.z;
-			IObject terrain = new BasicTerrainBlock (displayObjects.basicTerrainDisplayObject, "Terrain", name, position);
-
-			GameObject createdTerrain = objectController.createAndDisplayGameObject (terrain);
-			terrain.gameObject = createdTerrain;
-
-			terrainDictionary.Add (position, terrain);
-
-		}
-		Battlefield battlefield = Battlefield.CreateInstance<Battlefield> ();
-		battlefield.setDictionary(terrainDictionary);
-
+		Battlefield battlefield = mapGen.getBattlefield (xSize, zSize);
 
 		if(gv != null)
 			gv.battlefield = battlefield;

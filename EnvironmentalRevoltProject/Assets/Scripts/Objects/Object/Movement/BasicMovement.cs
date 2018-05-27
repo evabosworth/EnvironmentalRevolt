@@ -111,9 +111,24 @@ public class BasicMovement : ScriptableObject, IMovement
 			return false;
 		}
 
+		//Unit Already in the place.
 		if (!gv.battlefield.isValidTerrainForUnitPlacement (toTerrain.position)) {
-			return false;
+
+
+			//Arleady a unit there
+			IObject movingUnit;
+			fromPos.y += gv.unitHeightModifier;
+			gv.battlefield.unitDictionary.TryGetValue(fromPos, out movingUnit);
+
+			string strTest = gv.battlefield.unitDictionary.Keys.ToString ();
+
+			//If there is no unit in the way, or i am the unit in the way
+			if (movingUnit == null || movingUnit.origPosition.Equals(fromPos)) {
+				gv.log ("here");
+				return false;
+			}
 		}
+
 
 		return true;
 	}

@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class CreateUnitState : IPlayerState
 {
-	GameObjectController objectController;
 	private GlobalVariables gv;
 	private DisplayObjects displayObjects;
 	public static int counter = 0;
-	public static GameObject highlightObject = null;
+	public static IObject highlightObject = null;
 
 
 	public override IPlayerState mouseOver(RaycastHit hit){
@@ -18,27 +17,30 @@ public class CreateUnitState : IPlayerState
 		GameObject hitObject = (GameObject)hit.collider.gameObject;
 		gv.log ("CreateUnitState: mouseOver -> CreateUnitState");
 
-		objectController = FindObjectOfType<GameObjectController>();
+		IObject codeHitObject = gv.battlefield.searchBattlefield (hitObject);
+
 
 		if (hit.collider.tag == "Terrain") {
-			if (!hitObject.Equals (highlightObject)) {//If the game object is new
+			if (!codeHitObject.Equals (highlightObject)) {//If the game object is new
 
-				removeHighlights(highlightObject);
+				removeHighlights(highlightObject); //old highlight no longer needs to be highlighted
 
-				if(gv.battlefield.isValidTerrainForUnitPlacement(hitObject.transform.position)){
-					objectController.changeHighlighting (hitObject, "BasicHighlighting", true);
+				highlightObject = codeHitObject;
+
+
+				if(gv.battlefield.isValidTerrainForUnitPlacement(highlightObject.position)){ //if valid
+					gv.battlefield.changeHighlight (highlightObject, "BasicHighlighting", true); //change highlight
 				}
 
 
-				highlightObject = hitObject;
 			} 
 		} else if(hit.collider.tag == "Character") {
-			if (!hitObject.Equals (highlightObject)) {//If the game object is new
+			if (!codeHitObject.Equals (highlightObject)) {//If the game object is new
 
 				removeHighlights(highlightObject);
-				objectController.changeHighlighting (hitObject, "InvalidHighlighting", true);
+				gv.battlefield.changeHighlight (codeHitObject, "InvalidHighlighting", true);
 
-				highlightObject = hitObject;
+				highlightObject = codeHitObject;
 			}
 		} else {
 			removeHighlights(highlightObject);
@@ -49,17 +51,20 @@ public class CreateUnitState : IPlayerState
 	}
 
 	public override IPlayerState missedMouseOverAction(){
+		gv = GlobalVariables.getInstance ();
+
 		removeHighlights (highlightObject);
 		return this;
 	}
 
-	private void removeHighlights(GameObject gameObject){
-		if (highlightObject == null) {
+	private void removeHighlights(IObject codeObj){
+		gv = GlobalVariables.getInstance ();
+		if (codeObj == null) {
 			return;
 		}
 
-		objectController.changeHighlighting (gameObject, "BasicHighlighting", false);
-		objectController.changeHighlighting (gameObject, "InvalidHighlighting", false);
+		gv.battlefield.changeHighlight (codeObj, "BasicHighlighting", false);
+		gv.battlefield.changeHighlight (codeObj, "InvalidHighlighting", false);
 		highlightObject = null;
 
 	}
@@ -68,36 +73,29 @@ public class CreateUnitState : IPlayerState
 	public override IPlayerState clickAction(RaycastHit hit){
 		gv = GlobalVariables.getInstance ();
 		GameObject hitObject = hit.collider.gameObject;
-
-		Dictionary<string, string> test = new Dictionary<string, string> ();
-		test.Add ("test", "test");
-		string testing = test ["test"];
-
+		IObject codeHitObject = gv.battlefield.searchBattlefield (hitObject);
 
 		gv.log ("CreateUnitState: Clicked -> CreateUnitState");
 
-		objectController = FindObjectOfType<GameObjectController>();
-		if(!gv.battlefield.isValidTerrainForUnitPlacement(hitObject.transform.position)){
+		if(!gv.battlefield.isValidTerrainForUnitPlacement(codeHitObject.position)){
 			return this;
 		}
 
 
 		if (hit.collider.tag == "Terrain")
 		{
-			Vector3 unitPosition = hitObject.transform.position;
-
-			unitPosition.y += gv.unitHeightModifier;
+			codeHitObject.position.y += gv.unitHeightModifier;
 
 
-			IObject unit = new Obstacle (displayObjects.basicUnitDisplayObject, "sphere" + counter, "SphereTest"  + counter, unitPosition);
+			IObject unit = new Obstacle (displayObjects.basicUnitDisplayObject, "sphere" + counter, "SphereTest"  + counter, codeHitObject.position);
 
-			bool isUnitAdded= gv.battlefield.addUnitToBattlefield (unit);
+			bool isUnitAdded= gv.battlefield.addObjectToBattlefield (unit);
 			if (isUnitAdded) {
-				objectController.createAndDisplayGameObject (unit);
 				counter++;
 			}
 
 			removeHighlights(highlightObject);
+			removeHighlights(unit);
 
 		}
 		if (hit.collider.tag == "Obstacle")
