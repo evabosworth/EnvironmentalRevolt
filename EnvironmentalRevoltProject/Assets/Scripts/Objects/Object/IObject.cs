@@ -11,6 +11,7 @@ public abstract class IObject: ScriptableObject {
 	public Vector3 origPosition; //For when moved, but not a new turn.
 	public List<string> currentHighlights = new List<string>();
 	public GlobalVariables gv;
+	public Size.Sizes size = Size.Sizes.MEDIUM;
 
 	public IObject(){
 		gv = GlobalVariables.getInstance ();

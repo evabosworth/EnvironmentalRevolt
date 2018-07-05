@@ -9,6 +9,10 @@ public abstract class IPlayerState: ScriptableObject {
 		return this;
 	}
 
+	public virtual IPlayerState passAction(IObject obj){
+		return this;
+	}
+
 	/**
 	 * clickAction should hold code for what the player's clicks can do 
 	 */

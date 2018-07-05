@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveUnitState : IPlayerState  {
+public class UnitTurnState : IPlayerState  {
 
 	public FindPossibleMovements lastMove;
 	public FindPossibleMovements move;
@@ -10,57 +10,50 @@ public class MoveUnitState : IPlayerState  {
 
 	private GlobalVariables gv;
 	public static IObject highlightedUnit = null;
-	public static IObject unit = null;
+
 	public static List<IObject> highlightedTerrain = new List<IObject> ();
 
-	public override IPlayerState passAction(IObject obj){
+	public override IPlayerState passiveAction(){
 		gv = GlobalVariables.getInstance ();
-		unit = obj;
-		if (obj == null) {
-			return this;
-		}
 
-		gv.battlefield.changeHighlight (unit, "BasicHighlighting", true);
+		IObject curUnit = gv.battlefield.GetNextTurnUnit ();
+
+		gv.battlefield.changeHighlight (curUnit, "BasicHighlighting", true);
 		//update what unit is higlighted
-		highlightedUnit = unit;
+		highlightedUnit = curUnit;
 
-		Vector3 unitTerrainPos = unit.position;
+		Vector3 unitTerrainPos = curUnit.position;
 		unitTerrainPos.y -= gv.unitHeightModifier;
 
-		List<Vector3> possibleMovement = unit.movement.findPossibleMovement (unitTerrainPos);
+		List<Vector3> possibleMovement = curUnit.movement.findPossibleMovement (unitTerrainPos);
 		List<IObject> movementObjects = gv.battlefield.convertListPosToListObject (possibleMovement);
 
+		//remove Old movement highlighting
+		gv.battlefield.removeListHighlights (highlightedTerrain, "MovementHighlighting");
 		gv.battlefield.addHighlights (movementObjects, "MovementHighlighting");
 		//update what terrain is highlighted
 		highlightedTerrain = movementObjects;
 
-		return this;
+
+		gv.log ("UnitTurnState: Character Clicked -> MoveUniteState");
+		MoveUnitState moveUnitState = MoveUnitState.CreateInstance<MoveUnitState>();
+		return moveUnitState.passAction(curUnit);
 	}
+
 
 	public override IPlayerState clickAction(RaycastHit hit){
 		gv = GlobalVariables.getInstance ();
 		// whatever tag you are looking for on your game object
 		if (hit.collider.tag == "Character") {
-			gv.log ("SelectUnitState: Character Clicked -> MoveUniteState");
+			gv.log ("UnitTurnState: Character Clicked -> MoveUniteState");
 			GameObject hitObject = hit.collider.gameObject;
 			IObject codeHitObject = gv.battlefield.searchBattlefield (hitObject);
-
 
 			return this;
 		} else if(hit.collider.tag == "Terrain") {
 			gv.log ("SelectUnitState: Terrain Clicked -> MoveUniteState");
 			GameObject hitTerrain = hit.collider.gameObject;
 
-			IObject terrainCode; 
-			gv.battlefield.terrainDictionary.TryGetValue (hitTerrain.transform.position, out terrainCode);
-
-
-			if (terrainCode != null && highlightedTerrain.Contains (terrainCode)) {
-				if (unit != null) {
-					gv.battlefield.moveUnit (unit, terrainCode.position);
-				}
-			}
-			
 		}//Add else ifs as needed for each tag you are looking for
 
 		return missedClickAction ();
@@ -79,18 +72,11 @@ public class MoveUnitState : IPlayerState  {
 
 	public override IPlayerState missedClickAction(){
 		gv = GlobalVariables.getInstance ();
-		gv.log ("MoveUnitState: Missed Click -> MoveUniteState");
+		gv.log ("MoveUnitState: Missed Click -> SelectUnitState");
 
 		removeHighlights (highlightedUnit);
 		gv.battlefield.removeListHighlights (highlightedTerrain, "MovementHighlighting");
 
-		return this;
-	}
-
-	public override IPlayerState manuallyAdvanceStage(){
-
-		gv.log ("MoveUniteState: ManuallyAdvance -> UnitTurnState");
-		UnitTurnState nextState = UnitTurnState.CreateInstance<UnitTurnState> ();
-		return nextState.passiveAction();
+		return SelectUnitState.CreateInstance<SelectUnitState>();
 	}
 }

@@ -357,7 +357,6 @@ GameObject:
   m_Component:
   - component: {fileID: 788320951}
   - component: {fileID: 788320950}
-  - component: {fileID: 788320952}
   m_Layer: 0
   m_Name: mapGen
   m_TagString: Untagged
@@ -391,21 +390,6 @@ Transform:
   m_Father: {fileID: 1058163348}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &788320952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 788320949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef386e8421a7fe445a3bbc24bbf05156, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  basicUnitDisplayObject: {fileID: 1419690248135230, guid: 5c7999922906c3d418157b21d6516ddd,
-    type: 2}
-  basicTerrainDisplayObject: {fileID: 1566910150180684, guid: def21a2b66657114fbc92996b67157ad,
-    type: 2}
 --- !u!1 &911543265
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,10 +582,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef386e8421a7fe445a3bbc24bbf05156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basicUnitDisplayObject: {fileID: 1419690248135230, guid: 5c7999922906c3d418157b21d6516ddd,
-    type: 2}
   basicTerrainDisplayObject: {fileID: 1566910150180684, guid: def21a2b66657114fbc92996b67157ad,
     type: 2}
+  displayUnitList:
+  - {fileID: 1419690248135230, guid: 5c7999922906c3d418157b21d6516ddd, type: 2}
+  - {fileID: 1201709039325800, guid: 078d6b353f19ed04a9685dc6123daf04, type: 2}
 --- !u!1 &1450176871
 GameObject:
   m_ObjectHideFlags: 0

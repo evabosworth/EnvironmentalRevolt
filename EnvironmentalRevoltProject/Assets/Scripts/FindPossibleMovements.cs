@@ -21,26 +21,7 @@ public class FindPossibleMovements : MonoBehaviour {
 		map = null;
     }
 	
-	// Update is called once per frame
-	void Update () {
-        if (Input.GetMouseButtonDown(0) && ableToMove)
-        {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 100))
-            {
-                // whatever tag you are looking for on your game object
-                if (hit.collider.tag == "MovementOption")
-                {
-                    int xtarget = (int) hit.transform.position.x;
-                    int ztarget = (int) hit.transform.position.z;
-                    GetComponent<Movement>().targets.Add(new Vector3(xtarget, hit.transform.position.y+.5625f, ztarget));
-                    FindPath(finalChoices[xtarget,ztarget]);
-                }
-            }
-        }
-    }
 
 
     public List<Node> FindMovements(Vector3 startLocation)

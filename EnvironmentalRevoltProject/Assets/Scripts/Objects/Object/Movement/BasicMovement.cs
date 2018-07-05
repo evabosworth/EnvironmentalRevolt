@@ -124,7 +124,6 @@ public class BasicMovement : ScriptableObject, IMovement
 
 			//If there is no unit in the way, or i am the unit in the way
 			if (movingUnit == null || movingUnit.origPosition.Equals(fromPos)) {
-				gv.log ("here");
 				return false;
 			}
 		}

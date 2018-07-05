@@ -13,6 +13,8 @@ public class Battlefield : ScriptableObject
 {
 	public Dictionary<Vector3, IObject> terrainDictionary;
 	public Dictionary<Vector3, IObject> unitDictionary;
+	public List<IObject> turnOrder = new List<IObject> ();
+	public int curTurn;
 	//public Dictionary<Vector3, IObject> obstacaleDictionary;
 	public List<IObject> hightlightedObjects;
 	public List<IPlayer> playerList; //player 0 always human?
@@ -29,6 +31,31 @@ public class Battlefield : ScriptableObject
 	public int maxHeight = 0;
 
 	GlobalVariables gv;
+
+	public IObject GetNextTurnUnit(){
+
+		if (turnOrder.Count <= 0) {
+
+			foreach(IObject obj in unitDictionary.Values){
+				if (obj != null) {
+					turnOrder.Add (obj);
+				}
+			}
+			curTurn = 0;
+		}
+
+		gv.log ("CurTurn"+ curTurn);
+
+
+		if (curTurn >= turnOrder.Count) {
+			curTurn = 0;
+		}
+
+		IObject result = turnOrder [curTurn];
+		curTurn++;
+		return result;
+	}
+
 
 	//pick a direciton PosX, NegX, PosY, NegY
 	//neutral zone where no one can place?
@@ -109,8 +136,7 @@ public class Battlefield : ScriptableObject
 			if (objY1 != null || objY2 != null) {
 				//if both blocks above are full, dont place unit
 				canPlaceUnitHuh= false;
-				gv.log ("can't place cuz terrain in way");
-				
+
 			}
 
 		}
@@ -159,14 +185,7 @@ public class Battlefield : ScriptableObject
 
 		return returnValue;
 	}
-
-	public void displayPossibleMovement(IObject obj){
-		Vector3 unitPosition = obj.origPosition;
-		Vector3 terrainUnderfoot = unitPosition;
-		terrainUnderfoot.y -= gv.unitHeightModifier;
-
-		//objectController.changeHighlighting
-	}
+		
 
 	public bool addObjectToBattlefield(IObject obj){
 		bool canPlace = isValidTerrainForUnitPlacement(obj.position);
@@ -185,7 +204,8 @@ public class Battlefield : ScriptableObject
 
 		toPos.y += gv.unitHeightModifier;
 
-		unitDictionary.Remove (codeObject.position);
+
+		unitDictionary.Remove (codeObject.origPosition);
 		codeObject.position = toPos;
 		unitDictionary.Add (toPos, codeObject);
 	}

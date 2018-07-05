@@ -152,7 +152,9 @@ public class CreateUnitState : IPlayerState
 
 		gv.battlefield.removeHighlights(highlightObject);
 		highlightObject = null;
-		return SelectUnitState.CreateInstance<SelectUnitState>();
+
+		UnitTurnState nextState = UnitTurnState.CreateInstance<UnitTurnState> ();
+		return nextState.passiveAction();
 	}
 
 	public override IPlayerState horizontalAction(int direction){
