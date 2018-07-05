@@ -6,11 +6,17 @@ public class CreateUnitState : IPlayerState
 {
 	private GlobalVariables gv;
 	private DisplayObjects displayObjects;
+	private GameObject currentUnit = null;
 	public static int counter = 0;
 	public static IObject highlightObject = null;
 
+
 	public override IPlayerState passiveAction(){
 		gv = GlobalVariables.getInstance ();
+		displayObjects = DisplayObjects.getInstance ();
+		if (currentUnit == null) {
+			currentUnit = displayObjects.displayUnitList [0];
+		}
 
 
 		return this;
@@ -113,7 +119,7 @@ public class CreateUnitState : IPlayerState
 			//TODO: add restrictions based on number of already placed and such
 			//		also have a unit stored in the state that is the active unit right now
 
-			IObject unit = new Obstacle (displayObjects.basicUnitDisplayObject, "sphere" + counter, "SphereTest"  + counter, unitPos);
+			IObject unit = new Obstacle (currentUnit, "sphere" + counter, "SphereTest"  + counter, unitPos);
 
 			bool isUnitAdded= gv.battlefield.addObjectToBattlefield (unit);
 			if (isUnitAdded) {
@@ -147,6 +153,27 @@ public class CreateUnitState : IPlayerState
 		gv.battlefield.removeHighlights(highlightObject);
 		highlightObject = null;
 		return SelectUnitState.CreateInstance<SelectUnitState>();
+	}
+
+	public override IPlayerState horizontalAction(int direction){
+		//TODO: change unit to be created
+		gv.log("Horizontal action hit" + direction);
+
+		gv = GlobalVariables.getInstance ();
+		displayObjects = DisplayObjects.getInstance ();
+
+
+		int curListPos = displayObjects.displayUnitList.IndexOf (currentUnit) + direction;
+
+		if (curListPos < 0) {
+			curListPos = displayObjects.displayUnitList.Count - 1;
+		} else if (curListPos >= displayObjects.displayUnitList.Count){
+			curListPos = 0;
+		}
+
+		currentUnit = displayObjects.displayUnitList [curListPos];
+
+		return this;
 	}
 }
 

@@ -50,4 +50,8 @@ public abstract class IPlayerState: ScriptableObject {
 	public virtual IPlayerState missedMouseOverAction(){
 		return this;
 	}
+
+	public virtual IPlayerState horizontalAction(int direction){
+		return this;
+	}
 }

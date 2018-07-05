@@ -6,8 +6,8 @@ public class DisplayObjects: MonoBehaviour
 {
 
 	//Probably best to keep things alphabetical here...
-	public GameObject basicUnitDisplayObject;
 	public GameObject basicTerrainDisplayObject;
+	public List<GameObject> displayUnitList;
 
 
 

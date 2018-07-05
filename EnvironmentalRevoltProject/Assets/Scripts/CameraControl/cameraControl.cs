@@ -22,14 +22,14 @@ public class cameraControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (Input.GetAxis ("Horizontal") > 0){
+		if (Input.GetAxis ("HorizontalCamera") > 0){
 
 			Vector3 velocity = Vector3.zero;    
 			Vector3 targetPosition = target.TransformPoint(new Vector3 (maxSpeed, 0.0f, -maxSpeed)); 
 			transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
 
 
-		} else if (Input.GetAxis ("Horizontal") < 0) {
+		} else if (Input.GetAxis ("HorizontalCamera") < 0) {
 			Vector3 velocity = Vector3.zero;    
 			Vector3 targetPosition = target.TransformPoint(new Vector3 (-maxSpeed, 0.0f, maxSpeed)); 
 			transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
@@ -57,11 +57,11 @@ public class cameraControl : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetAxis ("Vertical") > 0) {
+		if (Input.GetAxis ("VerticalCamera") > 0) {
 			Vector3 velocity = Vector3.zero;    
 			Vector3 targetPosition = target.TransformPoint(new Vector3 (maxSpeed, 0.0f, maxSpeed)); 
 			transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
-		} else if (Input.GetAxis ("Vertical") < 0) {
+		} else if (Input.GetAxis ("VerticalCamera") < 0) {
 			Vector3 velocity = Vector3.zero;    
 			Vector3 targetPosition = target.TransformPoint(new Vector3 (-maxSpeed, 0.0f, -maxSpeed)); 
 			transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);

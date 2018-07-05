@@ -58,10 +58,21 @@ public class GameStateManager: MonoBehaviour
 
 		//close left mouse click
 		//default, enter button start
-		else if(Input.GetAxis("Submit") > 0){
+		if(Input.GetAxis("Submit") > 0){
 			playerState = playerState.manuallyAdvanceStage ();
-		
 		}
+
+
+
+
+		bool changeInUse = false;
+		if(Input.GetAxisRaw("Horizontal") != 0){
+			if (!changeInUse) {
+				changeInUse = true;
+				playerState = playerState.horizontalAction((int)Input.GetAxisRaw("Horizontal"));
+			}
+			changeInUse = false;
+		} 
 
 	}
 
