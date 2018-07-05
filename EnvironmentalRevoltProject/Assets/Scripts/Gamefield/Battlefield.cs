@@ -13,7 +13,7 @@ public class Battlefield : ScriptableObject
 {
 	public Dictionary<Vector3, IObject> terrainDictionary;
 	public Dictionary<Vector3, IObject> unitDictionary;
-	public Dictionary<Vector3, IObject> obstacaleDictionary;
+	//public Dictionary<Vector3, IObject> obstacaleDictionary;
 	public List<IObject> hightlightedObjects;
 	public List<IPlayer> playerList; //player 0 always human?
 
@@ -69,14 +69,19 @@ public class Battlefield : ScriptableObject
 		
 	}
 
+	/**
+	 * isValidTerrainForInitialUnitPlacement:
+	 * allows for players to have set positions in which to place within the battlefield
+	 */
 	public bool isValidTerrainForInitialUnitPlacement(Vector3 position){
+		
 		IPlayer player = playerList[0];
 		bool result = isValidTerrainForUnitPlacement (position);
 
 		Dictionary<Vector3, IObject> startingPositions = player.startingPositions;
 		IObject terrainResult;
 
-		result &= (startingPositions.TryGetValue (position, out terrainResult));
+		result = result && (startingPositions.TryGetValue (position, out terrainResult));
 
 		return result;
 	}
@@ -85,10 +90,10 @@ public class Battlefield : ScriptableObject
 	public bool isValidTerrainForUnitPlacement(Vector3 position){
 		bool canPlaceUnitHuh = true;
 
+		IObject obj = null;
 
 
-
-		if (terrainDictionary.ContainsKey (position)) {
+		if (terrainDictionary.TryGetValue (position, out obj)) {
 			//Actually this will check if the terrain is inpassable, make sure its a valid terrain to stand on.
 			Vector3 posY1 = position;
 			posY1.y += gv.basicTerrainHeight;
@@ -102,17 +107,23 @@ public class Battlefield : ScriptableObject
 			terrainDictionary.TryGetValue (posY2, out objY2);
 
 			if (objY1 != null || objY2 != null) {
-				//if both blocks above are empty, place unit
+				//if both blocks above are full, dont place unit
 				canPlaceUnitHuh= false;
+				gv.log ("can't place cuz terrain in way");
 				
 			}
 
-		} 
-
-		if (unitDictionary.ContainsKey (position)) {
-			//if unit is already there, it can't place
-			canPlaceUnitHuh = false;
 		}
+
+
+		if (unitDictionary.TryGetValue (position, out obj)) {
+			if (obj != null) {
+				canPlaceUnitHuh = false;
+				gv.log ("can't place cuz unit in way");
+				gv.log (obj.displayName);
+			} 
+		} 
+		
 		return canPlaceUnitHuh;
 	}
 
@@ -188,8 +199,20 @@ public class Battlefield : ScriptableObject
 		objectController.changeHighlight (obj, highlightName, active);
 	}
 
-	public void removeHighlights(List<IObject> objs, string highlightName){
+	public void removeListHighlights(List<IObject> objs, string highlightName){
 		objectController.removeHighlights(objs, highlightName);
+	}
+
+
+
+	public void removeHighlights(IObject codeObj){
+		gv = GlobalVariables.getInstance ();
+		if (codeObj == null) {
+			return;
+		}
+
+		changeHighlight (codeObj, "BasicHighlighting", false);
+		changeHighlight (codeObj, "InvalidHighlighting", false);
 
 	}
 
@@ -240,6 +263,17 @@ public class Battlefield : ScriptableObject
 			hightlightedObjects = GlobalVariables.convertDictionaryToList(playerList [0].startingPositions);
 			objectController.addHighlights (hightlightedObjects, "MovementHightlight");
 
+		}
+	}
+
+	public void removeUnit(IObject codeObject){
+		bool canRemove = !isValidTerrainForUnitPlacement(codeObject.position);
+
+		if (canRemove) {
+			bool removed = unitDictionary.Remove (codeObject.position);
+
+			objectController = FindObjectOfType<GameObjectController> ();
+			objectController.removeObject (codeObject);
 		}
 	}
 

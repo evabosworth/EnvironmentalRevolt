@@ -17,6 +17,13 @@ public abstract class IPlayerState: ScriptableObject {
 	}
 
 	/**
+	 * 
+	 */
+	public virtual IPlayerState secondaryClickAction(RaycastHit hit){
+		return this;
+	}
+
+	/**
 	 * missedClickAction is called when a click occurs and doesnt hit anything.
 	 */
 	public virtual IPlayerState missedClickAction(){

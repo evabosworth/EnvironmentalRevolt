@@ -39,7 +39,7 @@ public class MoveUnitState : IPlayerState  {
 				List<IObject> movementObjects = gv.battlefield.convertListPosToListObject (possibleMovement);
 
 				//remove Old movement highlighting
-				gv.battlefield.removeHighlights (highlightedTerrain, "MovementHighlighting");
+				gv.battlefield.removeListHighlights (highlightedTerrain, "MovementHighlighting");
 				gv.battlefield.addHighlights (movementObjects, "MovementHighlighting");
 				//update what terrain is highlighted
 				highlightedTerrain = movementObjects;
@@ -82,7 +82,7 @@ public class MoveUnitState : IPlayerState  {
 		gv.log ("MoveUnitState: Missed Click -> SelectUnitState");
 
 		removeHighlights (highlightedUnit);
-		gv.battlefield.removeHighlights (highlightedTerrain, "MovementHighlighting");
+		gv.battlefield.removeListHighlights (highlightedTerrain, "MovementHighlighting");
 
 		return SelectUnitState.CreateInstance<SelectUnitState>();
 	}

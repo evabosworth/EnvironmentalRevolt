@@ -47,7 +47,15 @@ public class GameStateManager: MonoBehaviour
 			} else { //clicked in a place where nothing exists. What do?
 				playerState = playerState.missedClickAction();
 			}
-		} 
+		}
+
+		//if There is a right mouse click
+		if (Input.GetMouseButtonDown (1)) {
+			if (Physics.Raycast (ray, out hit, 100)) {
+				playerState = playerState.secondaryClickAction (hit);
+			} 
+		}
+
 		//close left mouse click
 		//default, enter button start
 		else if(Input.GetAxis("Submit") > 0){

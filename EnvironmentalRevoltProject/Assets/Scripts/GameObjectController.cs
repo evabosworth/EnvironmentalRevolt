@@ -23,6 +23,10 @@ public class GameObjectController : MonoBehaviour
 	}
 
 	public void addHighlights(List<IObject> codeObjects, string highlightName){
+		if (codeObjects == null) {
+			return;
+		}
+
 
 		foreach (IObject codeObject in codeObjects) {
 			GameObject builtGameObject = GameObject.Find (codeObject.uniqueName);
@@ -33,6 +37,9 @@ public class GameObjectController : MonoBehaviour
 	}
 
 	public void removeHighlights(List<IObject> codeObjects, string highlightName){
+		if (codeObjects == null) {
+			return;
+		}
 
 		foreach (IObject codeObject in codeObjects) {
 			GameObject builtGameObject = GameObject.Find (codeObject.uniqueName);
@@ -43,7 +50,6 @@ public class GameObjectController : MonoBehaviour
 	}
 
 	public void changeHighlight(IObject gamePiece, string searchName, bool active){
-
 
 		if (gamePiece != null) {
 			GameObject builtGameObject = GameObject.Find (gamePiece.uniqueName);
@@ -60,11 +66,17 @@ public class GameObjectController : MonoBehaviour
 	public void moveObject(IObject codeObject, Vector3 toPos){
 		toPos.y += gv.unitHeightModifier;
 
-		gv.log ("Move unit " + codeObject.uniqueName + " from " + codeObject.position.ToString() + " to " + toPos.ToString());
+		gv.log ("GameObjectController: Move unit " + codeObject.uniqueName + " from " + codeObject.position.ToString() + " to " + toPos.ToString());
 		GameObject builtGameObject = GameObject.Find (codeObject.uniqueName);
 		if (builtGameObject != null) {
 			builtGameObject.transform.SetPositionAndRotation (toPos, Quaternion.identity);
 		}
+	}
+
+	public void removeObject(IObject codeObject){
+		GameObject builtGameObject = GameObject.Find (codeObject.uniqueName);
+
+		GameObject.Destroy (builtGameObject);
 	}
 }
 
