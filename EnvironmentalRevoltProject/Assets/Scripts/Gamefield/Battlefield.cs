@@ -1,4 +1,4 @@
-﻿ using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +14,8 @@ public class Battlefield : ScriptableObject
 	public Dictionary<Vector3, IObject> terrainDictionary;
 	public Dictionary<Vector3, IObject> unitDictionary;
 	public Dictionary<Vector3, IObject> obstacaleDictionary;
+	public List<IObject> hightlightedObjects;
+	public List<IPlayer> playerList; //player 0 always human?
 
 	//This should be controlled by player, not battlefield
 	/*
@@ -24,8 +26,6 @@ public class Battlefield : ScriptableObject
 	public Dictionary<Vector2, float> terrainHeightDictionary = new Dictionary<Vector2, float>();
 	GameObjectController objectController;
 
-
-
 	public int maxHeight = 0;
 
 	GlobalVariables gv;
@@ -33,6 +33,7 @@ public class Battlefield : ScriptableObject
 	//pick a direciton PosX, NegX, PosY, NegY
 	//neutral zone where no one can place?
 	//int direction = 0;
+
 
 
 	//the initalization from MapGen
@@ -68,6 +69,19 @@ public class Battlefield : ScriptableObject
 		
 	}
 
+	public bool isValidTerrainForInitialUnitPlacement(Vector3 position){
+		IPlayer player = playerList[0];
+		bool result = isValidTerrainForUnitPlacement (position);
+
+		Dictionary<Vector3, IObject> startingPositions = player.startingPositions;
+		IObject terrainResult;
+
+		result &= (startingPositions.TryGetValue (position, out terrainResult));
+
+		return result;
+	}
+
+	//Add parameter for which player?
 	public bool isValidTerrainForUnitPlacement(Vector3 position){
 		bool canPlaceUnitHuh = true;
 
@@ -217,6 +231,15 @@ public class Battlefield : ScriptableObject
 			} else {
 				terrainHeightDictionary.Add (coord, y);
 			}
+		}
+	}
+
+	public void highlightPlaceableTerrain(){
+		objectController = FindObjectOfType<GameObjectController>();
+		if (hightlightedObjects == null) {
+			hightlightedObjects = GlobalVariables.convertDictionaryToList(playerList [0].startingPositions);
+			objectController.addHighlights (hightlightedObjects, "MovementHightlight");
+
 		}
 	}
 

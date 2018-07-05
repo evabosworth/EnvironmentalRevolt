@@ -29,6 +29,18 @@ public class GlobalVariables: MonoBehaviour
 		return node;
 	}
 
+	public static List<IObject> convertDictionaryToList(Dictionary<Vector3,IObject> dictionary){
+		List<IObject> list = new List<IObject> ();
+
+		if (dictionary != null) {
+			foreach (KeyValuePair<Vector3,IObject> entry in dictionary) {
+				list.Add (entry.Value);
+			}
+		}
+
+		return list;
+	}
+
 	public void log(string message){
 		if (DEBUG) {
 			Debug.Log (message);

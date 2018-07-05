@@ -18,13 +18,15 @@ public class GameStateManager: MonoBehaviour
 
 
 	public void Start(){
+		gv = FindObjectOfType<GlobalVariables> ();
 
 		playerState = CreateUnitState.CreateInstance<CreateUnitState>();
 
-		gv = FindObjectOfType<GlobalVariables> ();
 	}
 
 	public void Update(){
+		playerState.passiveAction ();
+
 		//Always listen for a click, and respond according to current state.
 		var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit hit;

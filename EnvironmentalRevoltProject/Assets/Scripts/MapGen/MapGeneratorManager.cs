@@ -33,6 +33,8 @@ public class MapGeneratorManager : MonoBehaviour
 
 		Battlefield battlefield = mapGen.getBattlefield (xSize, zSize);
 
+		battlefield.highlightPlaceableTerrain ();
+
 		if(gv != null)
 			gv.battlefield = battlefield;
 	}

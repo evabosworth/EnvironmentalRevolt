@@ -20,6 +20,14 @@ public class BattlefieldGen : IMap
 		Battlefield battlefield = Battlefield.CreateInstance<Battlefield>();
 
 		battlefield.setTerrainDictionary (createPlainsTerrain (xSize, zSize));
+
+		List<IPlayer> players = new List<IPlayer> ();
+		IPlayer human = new HumanPlayer (battlefield.terrainDictionary, xSize, zSize, basicHeight);
+
+		players.Add (human);
+		battlefield.playerList = players;
+
+
 		return battlefield;
 	}
 

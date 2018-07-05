@@ -5,6 +5,10 @@ using UnityEngine;
 public abstract class IPlayerState: ScriptableObject {
 	public IPlayerState previousState = null;
 
+	public virtual IPlayerState passiveAction(){
+		return this;
+	}
+
 	/**
 	 * clickAction should hold code for what the player's clicks can do 
 	 */

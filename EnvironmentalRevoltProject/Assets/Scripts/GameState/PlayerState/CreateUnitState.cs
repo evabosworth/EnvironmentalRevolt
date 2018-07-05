@@ -9,6 +9,13 @@ public class CreateUnitState : IPlayerState
 	public static int counter = 0;
 	public static IObject highlightObject = null;
 
+	public override IPlayerState passiveAction(){
+		gv = GlobalVariables.getInstance ();
+
+
+		return this;
+	}
+
 
 	public override IPlayerState mouseOver(RaycastHit hit){
 		gv = GlobalVariables.getInstance ();
@@ -28,7 +35,7 @@ public class CreateUnitState : IPlayerState
 				highlightObject = codeHitObject;
 
 
-				if(gv.battlefield.isValidTerrainForUnitPlacement(highlightObject.position)){ //if valid
+				if(gv.battlefield.isValidTerrainForInitialUnitPlacement(highlightObject.position)){ //if valid
 					gv.battlefield.changeHighlight (highlightObject, "BasicHighlighting", true); //change highlight
 				}
 
@@ -77,7 +84,7 @@ public class CreateUnitState : IPlayerState
 
 		gv.log ("CreateUnitState: Clicked -> CreateUnitState");
 
-		if(!gv.battlefield.isValidTerrainForUnitPlacement(codeHitObject.position)){
+		if(!gv.battlefield.isValidTerrainForInitialUnitPlacement(codeHitObject.position)){
 			return this;
 		}
 
@@ -86,6 +93,8 @@ public class CreateUnitState : IPlayerState
 		{
 			codeHitObject.position.y += gv.unitHeightModifier;
 
+			//TODO: add restrictions based on number of already placed and such
+			//		also have a unit stored in the state that is the active unit right now
 
 			IObject unit = new Obstacle (displayObjects.basicUnitDisplayObject, "sphere" + counter, "SphereTest"  + counter, codeHitObject.position);
 
