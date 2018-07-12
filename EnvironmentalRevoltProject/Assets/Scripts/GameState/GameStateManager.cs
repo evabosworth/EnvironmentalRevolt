@@ -14,6 +14,7 @@ public class GameStateManager: MonoBehaviour
 	List<Node> possibleMovements;
 	// Use this for initialization
 	GlobalVariables gv;
+	float lastInput = 0;
 
 
 
@@ -64,15 +65,14 @@ public class GameStateManager: MonoBehaviour
 
 
 
+		float horizontalInput = Input.GetAxisRaw("Horizontal");
+		if (lastInput != horizontalInput) {
+			lastInput = horizontalInput;
+			if(horizontalInput != 0){
+				playerState = playerState.horizontalAction((int)horizontalInput);
 
-		bool changeInUse = false;
-		if(Input.GetAxisRaw("Horizontal") != 0){
-			if (!changeInUse) {
-				changeInUse = true;
-				playerState = playerState.horizontalAction((int)Input.GetAxisRaw("Horizontal"));
-			}
-			changeInUse = false;
-		} 
+			} 
+		}
 
 	}
 

@@ -32,6 +32,16 @@ public class Battlefield : ScriptableObject
 
 	GlobalVariables gv;
 
+	public void readyForPlayer(){
+		IDictionaryEnumerator enumerable = playerList [0].startingPositions.GetEnumerator ();
+
+		while (enumerable.MoveNext()) {
+			
+			changeHighlight ((IObject)(enumerable.Value), "ValidHighlighting", true);
+
+		}
+	}
+
 	public IObject GetNextTurnUnit(){
 
 		if (turnOrder.Count <= 0) {
@@ -223,6 +233,16 @@ public class Battlefield : ScriptableObject
 		objectController.removeHighlights(objs, highlightName);
 	}
 
+	public void removeDictionaryHighlights(Dictionary<Vector3, IObject> objs, string highlightName){
+		
+		IDictionaryEnumerator enumerable = playerList [0].startingPositions.GetEnumerator ();
+
+		while (enumerable.MoveNext()) {
+
+			changeHighlight ((IObject)(enumerable.Value), "ValidHighlighting", false);
+
+		}
+	}
 
 
 	public void removeHighlights(IObject codeObj){
@@ -295,6 +315,18 @@ public class Battlefield : ScriptableObject
 			objectController = FindObjectOfType<GameObjectController> ();
 			objectController.removeObject (codeObject);
 		}
+	}
+
+
+	public void removeTerrainHighlights(string highlighName){
+		removeDictionaryHighlights (terrainDictionary, highlighName);
+	}
+
+	public void displaySelectedObject(IObject codeObject){
+		objectController = FindObjectOfType<GameObjectController> ();
+		objectController.displaySelectedObject (codeObject);
+		
+
 	}
 
 }

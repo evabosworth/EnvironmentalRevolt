@@ -78,5 +78,22 @@ public class GameObjectController : MonoBehaviour
 
 		GameObject.Destroy (builtGameObject);
 	}
+
+	public void displaySelectedObject(IObject codeObject){
+		//find ObjectPlacementDisplay
+		GameObject objectPlacementDisplayWrapper = GameObject.Find ("ObjectPlacementDisplayWrapper");
+		GameObject oldObjectPlacementDisplay = GameObject.Find ("ObjectPlacementDisplay");
+		if (oldObjectPlacementDisplay != null) {
+			GameObject.Destroy (oldObjectPlacementDisplay);
+		}
+
+		GameObject builtGameObject = createAndDisplayGameObject (codeObject);
+		builtGameObject.transform.SetParent (objectPlacementDisplayWrapper.transform);
+		builtGameObject.transform.localPosition = Vector3.zero;
+		builtGameObject.transform.localRotation = Quaternion.identity;
+
+		builtGameObject.transform.localScale = new Vector3(10f, 10f, 10f);
+
+	}
 }
 

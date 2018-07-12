@@ -17,8 +17,17 @@ public abstract class IObject: ScriptableObject {
 		gv = GlobalVariables.getInstance ();
 	}
 
+	public virtual void init(GameObject gameObject, string displayName, string UniqueName, Vector3 position){
+		gv = GlobalVariables.getInstance ();
 
+		this.gameObject = gameObject;
+		this.displayName = displayName;
+		this.uniqueName = UniqueName;
+		this.position = position;
+		this.origPosition = position;
+	}
 
+	/*
 	public IObject (GameObject gameObject, string displayName, string UniqueName, Vector3 position){
 		gv = GlobalVariables.getInstance ();
 
@@ -28,6 +37,7 @@ public abstract class IObject: ScriptableObject {
 		this.position = position;
 		this.origPosition = position;
 	}
+	*/
 
 	public void addHightlight(string highlightName){
 		currentHighlights.Add (highlightName);

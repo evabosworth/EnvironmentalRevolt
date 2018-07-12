@@ -6,7 +6,7 @@ public class CreateUnitState : IPlayerState
 {
 	private GlobalVariables gv;
 	private DisplayObjects displayObjects;
-	private GameObject currentUnit = null;
+	private IObject currentUnit = null;
 	public static int counter = 0;
 	public static IObject highlightObject = null;
 
@@ -15,7 +15,9 @@ public class CreateUnitState : IPlayerState
 		gv = GlobalVariables.getInstance ();
 		displayObjects = DisplayObjects.getInstance ();
 		if (currentUnit == null) {
-			currentUnit = displayObjects.displayUnitList [0];
+			currentUnit = Obstacle.CreateInstance<Obstacle> ();
+			currentUnit.init(displayObjects.displayUnitList [0],"ObjectPlacementDisplay","ObjectPlacementDisplay",new Vector3(0,0,0));
+			gv.battlefield.displaySelectedObject (currentUnit);
 		}
 
 
@@ -119,7 +121,9 @@ public class CreateUnitState : IPlayerState
 			//TODO: add restrictions based on number of already placed and such
 			//		also have a unit stored in the state that is the active unit right now
 
-			IObject unit = new Obstacle (currentUnit, "sphere" + counter, "SphereTest"  + counter, unitPos);
+			IObject unit = Obstacle.CreateInstance<Obstacle> ();
+			unit.init(currentUnit.gameObject, "sphere" + counter, "SphereTest"  + counter, unitPos);
+
 
 			bool isUnitAdded= gv.battlefield.addObjectToBattlefield (unit);
 			if (isUnitAdded) {
@@ -151,6 +155,7 @@ public class CreateUnitState : IPlayerState
 		gv.log ("CreateUnitState: Advance Stage -> SelectUnitState");
 
 		gv.battlefield.removeHighlights(highlightObject);
+		gv.battlefield.removeTerrainHighlights ("ValidHighlighting");
 		highlightObject = null;
 
 		UnitTurnState nextState = UnitTurnState.CreateInstance<UnitTurnState> ();
@@ -165,7 +170,7 @@ public class CreateUnitState : IPlayerState
 		displayObjects = DisplayObjects.getInstance ();
 
 
-		int curListPos = displayObjects.displayUnitList.IndexOf (currentUnit) + direction;
+		int curListPos = displayObjects.displayUnitList.IndexOf (currentUnit.gameObject) + direction;
 
 		if (curListPos < 0) {
 			curListPos = displayObjects.displayUnitList.Count - 1;
@@ -173,7 +178,10 @@ public class CreateUnitState : IPlayerState
 			curListPos = 0;
 		}
 
-		currentUnit = displayObjects.displayUnitList [curListPos];
+		currentUnit = Obstacle.CreateInstance<Obstacle> ();
+		currentUnit.init(displayObjects.displayUnitList [curListPos],"ObjectPlacementDisplay", "ObjectPlacementDisplay",new Vector3());
+		gv.battlefield.displaySelectedObject (currentUnit);
+
 
 		return this;
 	}

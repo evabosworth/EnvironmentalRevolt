@@ -27,7 +27,7 @@ public class BattlefieldGen : IMap
 		players.Add (human);
 		battlefield.playerList = players;
 
-
+		battlefield.readyForPlayer ();
 		return battlefield;
 	}
 
@@ -41,7 +41,10 @@ public class BattlefieldGen : IMap
 				Vector3 position = new Vector3 (x, y, z);
 				string name = "Terrain; x:" + position.x + ", y:" + position.y + ", z:" + position.z;
 
-				IObject terrainBlock = new BasicTerrainBlock (disObjs.basicTerrainDisplayObject, name, name, position);
+				 //new BasicTerrainBlock (disObjs.basicTerrainDisplayObject, name, name, position);
+				IObject terrainBlock = BasicTerrainBlock.CreateInstance<BasicTerrainBlock> ();
+				terrainBlock.init (disObjs.basicTerrainDisplayObject, name, name, position);
+
 				flatland.Add (position, terrainBlock);
 			}
 		}
@@ -63,7 +66,10 @@ public class BattlefieldGen : IMap
 
 					GameObject basicTerrainDefault = disObjs.basicTerrainDisplayObject;
 
-					IObject terrainBlock = new BasicTerrainBlock (basicTerrainDefault, name, name, position);
+					//IObject terrainBlock = new BasicTerrainBlock (basicTerrainDefault, name, name, position);
+					IObject terrainBlock = BasicTerrainBlock.CreateInstance<BasicTerrainBlock>();
+					terrainBlock.init (basicTerrainDefault, name, name, position);
+
 					terrainDict.Add (position, terrainBlock);
 				}
 			}

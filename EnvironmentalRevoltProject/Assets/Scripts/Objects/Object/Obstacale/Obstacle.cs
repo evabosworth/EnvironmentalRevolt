@@ -5,10 +5,11 @@ using UnityEngine;
 public class Obstacle : IObject
 {
 
-	public Obstacle(GameObject gameObject, string displayName, string uniqueName, Vector3 position) : base(gameObject, displayName, uniqueName, position)
-	{
+	public override void init(GameObject gameObject, string displayName, string uniqueName, Vector3 position){
+		base.init (gameObject, displayName, uniqueName, position);
 
-		this.movement = new BasicMovement (5, 2);
+		this.movement = BasicMovement.CreateInstance<BasicMovement> ();
+		this.movement.init(5, 2);
 
 
 	}

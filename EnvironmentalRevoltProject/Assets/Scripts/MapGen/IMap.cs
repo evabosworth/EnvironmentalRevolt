@@ -28,7 +28,10 @@ public abstract class IMap : ScriptableObject
 				Vector3 position = new Vector3 (x, y, z);
 				string name = "Terrain; x:" + position.x + ", y:" + position.y + " z:" + position.z;
 
-				IObject terrainBlock = new BasicTerrainBlock (disObjs.basicTerrainDisplayObject, name, name, position);
+				//IObject terrainBlock = new BasicTerrainBlock (disObjs.basicTerrainDisplayObject, name, name, position);
+				IObject terrainBlock = BasicTerrainBlock.CreateInstance<BasicTerrainBlock>();
+				terrainBlock.init (disObjs.basicTerrainDisplayObject, name, name, position);
+
 				flatland.Add (position, terrainBlock);
 			}
 		}

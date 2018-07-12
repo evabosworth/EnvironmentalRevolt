@@ -10,13 +10,12 @@ public class BasicMovement : ScriptableObject, IMovement
 
 	float jumpHeight;
 
-
-	//Allow movement (distance) squares in any direction, ignore height. 
-	public BasicMovement(int distance, int jumpHeightUnits){
+	public void init(int distance, int jumpHeightUnits){
 		gv = GlobalVariables.getInstance ();
 		this.distance = distance;
 		jumpHeight = gv.basicTerrainHeight * jumpHeightUnits;
 	}
+
 
 	public List<Vector3> findPossibleMovement (Vector3 startPos){
 		visitedPositions = new List<Vector3> ();

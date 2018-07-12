@@ -29,7 +29,7 @@ public class MapGeneratorManager : MonoBehaviour
 
 		objectController = FindObjectOfType<GameObjectController> ();
 
-		IMap mapGen = new BattlefieldGen ();
+		IMap mapGen = BattlefieldGen.CreateInstance<BattlefieldGen>();
 
 		Battlefield battlefield = mapGen.getBattlefield (xSize, zSize);
 
