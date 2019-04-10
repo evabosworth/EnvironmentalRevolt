@@ -9,14 +9,19 @@ public class BattlefieldManager
 	private GlobalVariables gv;
 
 	public BattlefieldManager (){
-		gv = GlobalVariables.getInstance ();
+        float starttime = DateTime.Now.Millisecond;
+        gv = GlobalVariables.getInstance ();
 		battlefield = new Battlefield ();
 
 		Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
 
 
-		//exampleRun ();
-		battlefield.printBattlefield(validPositions);
+
+		exampleRun ();
+
+        float endtime = DateTime.Now.Millisecond;
+        gv.printToConsole((endtime-starttime)+"");
+		//battlefield.printBattlefield(validPositions);
 	}
 
 	//A list of actions to test things as if user input

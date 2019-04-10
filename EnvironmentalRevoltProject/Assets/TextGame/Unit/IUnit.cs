@@ -11,6 +11,12 @@ public abstract class IUnit : IWorldObject
 	protected int movement = 4;
 	protected List<IAttack> attacks;
 	protected IPlayer unitOwner;
+    protected int jumpHeight = 2;
+
+    public int getJumpHeight()
+    {
+        return jumpHeight;
+    }
 
     public int getMovement()
     {

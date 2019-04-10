@@ -134,7 +134,7 @@ public class Battlefield
         Vector3 unitPosInitial = unit.getCurrentPosition();
         List<Vector3> visitedPositionsRecursive = new List<Vector3>();
         int movementLeft = unit.getMovement();
-        List<Vector3> visitedPositions = listPossibleMovementsRecursion(unitPosInitial, movementLeft, visitedPositionsRecursive);
+        List<Vector3> visitedPositions = listPossibleMovementsRecursion(unitPosInitial, movementLeft, visitedPositionsRecursive, unit.getJumpHeight());
         foreach (Vector3 item in visitedPositions)
         {
             ITerrain terrain;
@@ -145,7 +145,7 @@ public class Battlefield
         return possibleMoves;
     }
 
-    private List<Vector3> listPossibleMovementsRecursion(Vector3 unitPosition, int movementLeft, List<Vector3> visitedPositionsRecursive)
+    private List<Vector3> listPossibleMovementsRecursion(Vector3 unitPosition, int movementLeft, List<Vector3> visitedPositionsRecursive, int jumpHeight)
     {
         GlobalVariables gv = GlobalVariables.getInstance();
         //gv.printToConsole(movementLeft.ToString());
@@ -162,6 +162,8 @@ public class Battlefield
         unitZP1.z += 1;
         Vector3 unitZM1 = unitPosition;
         unitZM1.z -= 1;
+        
+         
         //x+1,x-1,y+1,y-1
 
         if (movementLeft == 0)
@@ -179,11 +181,37 @@ public class Battlefield
                     visitedPositionsRecursive.Add(unitXP1);
                 }
                 List<Vector3> holderList = new List<Vector3>();
-                holderList = listPossibleMovementsRecursion(unitXP1, movementLeft - 1, visitedPositionsRecursive);
+                holderList = listPossibleMovementsRecursion(unitXP1, movementLeft - 1, visitedPositionsRecursive,jumpHeight);
 
 
             }
         }
+        else
+        {
+            Dictionary<Vector3, ITerrain> possiblePlacements;
+            possiblePlacements = getAllValidPlacements();
+            for (int i = -jumpHeight; i < jumpHeight; i++)
+            {
+                Vector3 tempPos = new Vector3();
+                tempPos = unitXP1;
+                tempPos.z += i;
+                if (possiblePlacements.ContainsKey(tempPos))
+                {
+                    if (!visitedPositionsRecursive.Contains(tempPos) || movementLeft > 1)
+                    {
+                        //gv.printToConsole(unitXP1.ToString());
+                        if (!visitedPositionsRecursive.Contains(tempPos))
+                        {
+                            visitedPositionsRecursive.Add(tempPos);
+                        }
+                        List<Vector3> holderList = new List<Vector3>();
+                        holderList = listPossibleMovementsRecursion(tempPos, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
+
+                    }
+                }
+            }
+        }
+
         //y+1
         if (isValidForUnitPlacement(unitYP1))
         {
@@ -194,26 +222,37 @@ public class Battlefield
                     visitedPositionsRecursive.Add(unitYP1);
                 }
                 List<Vector3> holderList = new List<Vector3>();
-                holderList = listPossibleMovementsRecursion(unitYP1, movementLeft - 1, visitedPositionsRecursive);
+                holderList = listPossibleMovementsRecursion(unitYP1, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
 
 
             }
         }
-        //z+1
-        if (isValidForUnitPlacement(unitZP1))
+        else
         {
-            if (!visitedPositionsRecursive.Contains(unitZP1) || movementLeft > 1)
+            Dictionary<Vector3, ITerrain> possiblePlacements;
+            possiblePlacements = getAllValidPlacements();
+            for (int i = -jumpHeight; i < jumpHeight; i++)
             {
-                if (!visitedPositionsRecursive.Contains(unitZP1))
+                Vector3 tempPos = new Vector3();
+                tempPos = unitYP1;
+                tempPos.z += i;
+                if (possiblePlacements.ContainsKey(tempPos))
                 {
-                    visitedPositionsRecursive.Add(unitZP1);
+                    if (!visitedPositionsRecursive.Contains(tempPos) || movementLeft > 1)
+                    {
+                        //gv.printToConsole(unitXP1.ToString());
+                        if (!visitedPositionsRecursive.Contains(tempPos))
+                        {
+                            visitedPositionsRecursive.Add(tempPos);
+                        }
+                        List<Vector3> holderList = new List<Vector3>();
+                        holderList = listPossibleMovementsRecursion(tempPos, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
+
+                    }
                 }
-                List<Vector3> holderList = new List<Vector3>();
-                holderList = listPossibleMovementsRecursion(unitZP1, movementLeft - 1, visitedPositionsRecursive);
-
-
             }
         }
+
         //x-1      
         if (isValidForUnitPlacement(unitXM1))
         {
@@ -225,11 +264,37 @@ public class Battlefield
 
                 }
                 List<Vector3> holderList = new List<Vector3>();
-                holderList = listPossibleMovementsRecursion(unitXM1, movementLeft - 1, visitedPositionsRecursive);
+                holderList = listPossibleMovementsRecursion(unitXM1, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
 
 
             }
         }
+        else
+        {
+            Dictionary<Vector3, ITerrain> possiblePlacements;
+            possiblePlacements = getAllValidPlacements();
+            for (int i = -jumpHeight; i < jumpHeight; i++)
+            {
+                Vector3 tempPos = new Vector3();
+                tempPos = unitXM1;
+                tempPos.z += i;
+                if (possiblePlacements.ContainsKey(tempPos))
+                {
+                    if (!visitedPositionsRecursive.Contains(tempPos) || movementLeft > 1)
+                    {
+                        //gv.printToConsole(unitXP1.ToString());
+                        if (!visitedPositionsRecursive.Contains(tempPos))
+                        {
+                            visitedPositionsRecursive.Add(tempPos);
+                        }
+                        List<Vector3> holderList = new List<Vector3>();
+                        holderList = listPossibleMovementsRecursion(tempPos, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
+
+                    }
+                }
+            }
+        }
+
         //y-1
         if (isValidForUnitPlacement(unitYM1))
         {
@@ -240,27 +305,37 @@ public class Battlefield
                     visitedPositionsRecursive.Add(unitYM1);
                 }
                 List<Vector3> holderList = new List<Vector3>();
-                holderList = listPossibleMovementsRecursion(unitYM1, movementLeft - 1, visitedPositionsRecursive);
+                holderList = listPossibleMovementsRecursion(unitYM1, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
 
 
             }
         }
-        //z-1      
-        if (isValidForUnitPlacement(unitZM1))
+        else
         {
-            if (!visitedPositionsRecursive.Contains(unitZM1) || movementLeft > 1)
+            Dictionary<Vector3, ITerrain> possiblePlacements;
+            possiblePlacements = getAllValidPlacements();
+            for (int i = -jumpHeight; i < jumpHeight; i++)
             {
-                if (!visitedPositionsRecursive.Contains(unitZM1))
+                Vector3 tempPos = new Vector3();
+                tempPos = unitYM1;
+                tempPos.z += i;
+                if (possiblePlacements.ContainsKey(tempPos))
                 {
-                    visitedPositionsRecursive.Add(unitZM1);
+                    if (!visitedPositionsRecursive.Contains(tempPos) || movementLeft > 1)
+                    {
+                        //gv.printToConsole(unitXP1.ToString());
+                        if (!visitedPositionsRecursive.Contains(tempPos))
+                        {
+                            visitedPositionsRecursive.Add(tempPos);
+                        }
+                        List<Vector3> holderList = new List<Vector3>();
+                        holderList = listPossibleMovementsRecursion(tempPos, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
 
+                    }
                 }
-                List<Vector3> holderList = new List<Vector3>();
-                holderList = listPossibleMovementsRecursion(unitZM1, movementLeft - 1, visitedPositionsRecursive);
-
-
             }
         }
+
 
         return visitedPositionsRecursive;
     }
