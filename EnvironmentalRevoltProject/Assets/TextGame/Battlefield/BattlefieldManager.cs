@@ -34,7 +34,8 @@ public class BattlefieldManager
         Dictionary<Vector3,ITerrain> possibleMovements = new Dictionary<Vector3, ITerrain>();
         possibleMovements = battlefield.listPossibleMovements(unit);
         battlefield.printBattlefield(possibleMovements);
-        
+        battlefield.tryMoveUnit(unit, new Vector3(0.0f, 11.0f, 5.0f));
+        battlefield.printThingsOnBattlefield();
 
 
     }

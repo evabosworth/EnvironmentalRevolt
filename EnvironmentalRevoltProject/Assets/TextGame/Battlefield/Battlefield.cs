@@ -101,7 +101,13 @@ public class Battlefield
 	
 	}
 
-	public void printThingsOnBattlefield(Dictionary<Vector3, IWorldObject> battlefield){
+    public void printThingsOnBattlefield()
+    {
+        printThingsOnBattlefield(objectsOnfield);
+    }
+
+
+    public void printThingsOnBattlefield(Dictionary<Vector3, IWorldObject> battlefield){
 		String str;
 		str = "[bfObjects]";
 
@@ -181,6 +187,10 @@ public class Battlefield
         unitYP1.y += 1;
         Vector3 unitYM1 = unitPosition;
         unitYM1.y -= 1;
+        Vector3 unitZP1 = unitPosition;
+        unitZP1.z += 1;
+        Vector3 unitZM1 = unitPosition;
+        unitZM1.z -= 1;
         //x+1,x-1,y+1,y-1
 
         if (movementLeft == 0)
@@ -218,6 +228,21 @@ public class Battlefield
 
             }
         }
+        //z+1
+        if (isValidForUnitPlacement(unitZP1))
+        {
+            if (!visitedPositionsRecursive.Contains(unitZP1) || movementLeft > 1)
+            {
+                if (!visitedPositionsRecursive.Contains(unitZP1))
+                {
+                    visitedPositionsRecursive.Add(unitZP1);
+                }
+                List<Vector3> holderList = new List<Vector3>();
+                holderList = listPossibleMovementsRecursion(unitZP1, movementLeft - 1, visitedPositionsRecursive);
+
+
+            }
+        }
         //x-1      
         if (isValidForUnitPlacement(unitXM1))
         {
@@ -249,7 +274,41 @@ public class Battlefield
 
             }
         }
-        
+        //z-1      
+        if (isValidForUnitPlacement(unitZM1))
+        {
+            if (!visitedPositionsRecursive.Contains(unitZM1) || movementLeft > 1)
+            {
+                if (!visitedPositionsRecursive.Contains(unitZM1))
+                {
+                    visitedPositionsRecursive.Add(unitZM1);
+
+                }
+                List<Vector3> holderList = new List<Vector3>();
+                holderList = listPossibleMovementsRecursion(unitZM1, movementLeft - 1, visitedPositionsRecursive);
+
+
+            }
+        }
+
         return visitedPositionsRecursive;
     }
+
+    public bool tryMoveUnit(IUnit unit, Vector3 toPos, Dictionary<Vector3,ITerrain> possibleMoves = null)
+    {
+        if (possibleMoves == null)
+        {
+            possibleMoves = listPossibleMovements(unit);
+        }
+        ITerrain terrain;
+        if(possibleMoves.TryGetValue(toPos, out terrain))
+        {
+            objectsOnfield.Remove(unit.getCurrentPosition());
+            unit.setCurrentPosition(toPos);
+            objectsOnfield.Add(toPos, unit);
+            return true;
+        }
+        else { return false; }
+    }
+
 }
