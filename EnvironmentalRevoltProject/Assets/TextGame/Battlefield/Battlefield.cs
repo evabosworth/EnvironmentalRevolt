@@ -150,4 +150,106 @@ public class Battlefield
 			}
 		}
 	}
+
+    public Dictionary<Vector3, ITerrain> listPossibleMovements(IUnit unit)
+    {
+        Dictionary<Vector3, ITerrain> possibleMoves = new Dictionary<Vector3, ITerrain>();
+        Vector3 unitPosInitial = unit.getCurrentPosition();
+        List<Vector3> visitedPositionsRecursive = new List<Vector3>();
+        int movementLeft = unit.getMovement();
+        List<Vector3> visitedPositions = listPossibleMovementsRecursion(unitPosInitial, movementLeft, visitedPositionsRecursive);
+        foreach (Vector3 item in visitedPositions)
+        {
+            ITerrain terrain;
+            battlefield.TryGetValue(item, out terrain);
+            possibleMoves.Add(item, terrain);
+        }
+
+        return possibleMoves;
+    }
+
+    private List<Vector3> listPossibleMovementsRecursion(Vector3 unitPosition, int movementLeft, List<Vector3> visitedPositionsRecursive)
+    {
+        GlobalVariables gv = GlobalVariables.getInstance();
+        //gv.printToConsole(movementLeft.ToString());
+        
+        Vector3 unitXP1 = unitPosition;
+        unitXP1.x += 1;
+        Vector3 unitXM1 = unitPosition;
+        unitXM1.x -= 1;
+        Vector3 unitYP1 = unitPosition;
+        unitYP1.y += 1;
+        Vector3 unitYM1 = unitPosition;
+        unitYM1.y -= 1;
+        //x+1,x-1,y+1,y-1
+
+        if (movementLeft == 0)
+        {
+            return visitedPositionsRecursive;
+        }
+        //x+1
+        if (isValidForUnitPlacement(unitXP1))
+        {
+            if (!visitedPositionsRecursive.Contains(unitXP1) || movementLeft > 1)
+            {
+                //gv.printToConsole(unitXP1.ToString());
+                if (!visitedPositionsRecursive.Contains(unitXP1))
+                {
+                    visitedPositionsRecursive.Add(unitXP1);
+                }
+                List<Vector3> holderList = new List<Vector3>();
+                holderList = listPossibleMovementsRecursion(unitXP1, movementLeft - 1, visitedPositionsRecursive);
+
+
+            }
+        }
+        //y+1
+        if (isValidForUnitPlacement(unitYP1))
+        {
+            if (!visitedPositionsRecursive.Contains(unitYP1)||movementLeft > 1)
+            {
+                if (!visitedPositionsRecursive.Contains(unitYP1))
+                {
+                    visitedPositionsRecursive.Add(unitYP1);
+                }
+                List<Vector3> holderList = new List<Vector3>();
+                holderList = listPossibleMovementsRecursion(unitYP1, movementLeft - 1, visitedPositionsRecursive);
+
+
+            }
+        }
+        //x-1      
+        if (isValidForUnitPlacement(unitXM1))
+        {
+            if (!visitedPositionsRecursive.Contains(unitXM1)||movementLeft > 1)
+            {
+                if (!visitedPositionsRecursive.Contains(unitXM1))
+                {
+                    visitedPositionsRecursive.Add(unitXM1);
+
+                }
+                List<Vector3> holderList = new List<Vector3>();
+                holderList = listPossibleMovementsRecursion(unitXM1, movementLeft - 1, visitedPositionsRecursive);
+
+
+            }
+        }
+        //y-1
+        if (isValidForUnitPlacement(unitYM1))
+        {
+            if (!visitedPositionsRecursive.Contains(unitYM1)||movementLeft > 1)
+            {
+                if (!visitedPositionsRecursive.Contains(unitYM1))
+                {
+                    visitedPositionsRecursive.Add(unitYM1);
+                }
+                List<Vector3> holderList = new List<Vector3>();
+                holderList = listPossibleMovementsRecursion(unitYM1, movementLeft - 1, visitedPositionsRecursive);
+
+
+            }
+        }
+        
+        return visitedPositionsRecursive;
+    }
 }

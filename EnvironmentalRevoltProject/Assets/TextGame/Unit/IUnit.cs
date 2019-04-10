@@ -12,5 +12,9 @@ public abstract class IUnit : IWorldObject
 	protected List<IAttack> attacks;
 	protected IPlayer unitOwner;
 
+    public int getMovement()
+    {
+        return movement;
+    }
 }
 

@@ -20,21 +20,24 @@ public class BattlefieldManager
 	public void exampleRun(){
 		Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
 
-
-
-		//battlefield.printBattlefield (validPositions);
-
 		IUnit unit = new Warrior ();
-		Vector3 pos = new Vector3 (0, 0, 5);
+		Vector3 pos = new Vector3 (10, 10, 5);
 
 		bool isPladced = tryPlaceUnitOntoBattlefield (pos, unit);
 		if (isPladced) {
 			unit.setCurrentPosition (pos);
 		}
 
+		//battlefield.printBattlefield ();
+        battlefield.printBattlefield(validPositions);
 
-		battlefield.printBattlefield ();
-	}
+        Dictionary<Vector3,ITerrain> possibleMovements = new Dictionary<Vector3, ITerrain>();
+        possibleMovements = battlefield.listPossibleMovements(unit);
+        battlefield.printBattlefield(possibleMovements);
+        
+
+
+    }
 
 	public bool tryPlaceUnitOntoBattlefield(Vector3 position, IUnit unit){
 
@@ -46,6 +49,13 @@ public class BattlefieldManager
 
 	}
 
+    public void printListOfMovement(List<Vector3> possibleMovements)
+    {
+        foreach (Vector3 item in possibleMovements)
+        {
+            gv.printToConsole(item.ToString());
+        }
+    }
 
 }
 

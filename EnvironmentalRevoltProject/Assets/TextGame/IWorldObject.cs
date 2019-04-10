@@ -13,5 +13,10 @@ public abstract class IWorldObject
 	public void setCurrentPosition(Vector3 pos){
 		currentPosition = pos;
 	}
+
+    public Vector3 getCurrentPosition()
+    {
+        return currentPosition;
+    }
 }
 
