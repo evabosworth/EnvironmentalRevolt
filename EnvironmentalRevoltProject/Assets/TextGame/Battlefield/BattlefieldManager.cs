@@ -12,8 +12,11 @@ public class BattlefieldManager
 		gv = GlobalVariables.getInstance ();
 		battlefield = new Battlefield ();
 
-		exampleRun ();
+		Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
 
+
+		//exampleRun ();
+		battlefield.printBattlefield(validPositions);
 	}
 
 	//A list of actions to test things as if user input
@@ -21,7 +24,7 @@ public class BattlefieldManager
 		Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
 
 		IUnit unit = new Warrior ();
-		Vector3 pos = new Vector3 (10, 10, 5);
+		Vector3 pos = new Vector3 (0, 0, 0);
 
 		bool isPladced = tryPlaceUnitOntoBattlefield (pos, unit);
 		if (isPladced) {
@@ -29,12 +32,12 @@ public class BattlefieldManager
 		}
 
 		//battlefield.printBattlefield ();
-        battlefield.printBattlefield(validPositions);
+       	//battlefield.printBattlefield(validPositions);
 
         Dictionary<Vector3,ITerrain> possibleMovements = new Dictionary<Vector3, ITerrain>();
         possibleMovements = battlefield.listPossibleMovements(unit);
         battlefield.printBattlefield(possibleMovements);
-        battlefield.tryMoveUnit(unit, new Vector3(0.0f, 11.0f, 5.0f));
+        //battlefield.tryMoveUnit(unit, new Vector3(0.0f, 11.0f, 5.0f));
         battlefield.printThingsOnBattlefield();
 
 

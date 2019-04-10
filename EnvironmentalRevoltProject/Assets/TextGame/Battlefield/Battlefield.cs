@@ -15,7 +15,8 @@ public class Battlefield
 
 	public Battlefield(){
 
-		createFlatland (length,width,depth);
+		//createFlatland (length,width,depth);
+		createStepland(length,width,depth);
 	}
 
 	public Dictionary<Vector3, ITerrain> getAllValidPlacements(){
@@ -125,36 +126,6 @@ public class Battlefield
 			str = "";
 		}
 
-	}
-
-
-	private void createFlatland(int length, int width, int depth){
-
-		for (int x = 0; x < length; x++) {
-			for (int y = 0; y < width; y++) {
-				for (int z = 0; z <= depth; z++) {
-					if (z == 0) {
-						//BedrockLayer
-						ITerrain bedrock = new Bedrock (new Vector3 (x, y, z));
-						battlefield.Add (new Vector3 (x, y, z), bedrock);
-					} else if (z<=2){
-						ITerrain stone = new Stone (new Vector3 (x, y, z));
-						battlefield.Add (new Vector3 (x, y, z), stone);
-
-					} else if (z<=depth/2){
-						ITerrain dirt = new Dirt (new Vector3 (x, y, z));
-						battlefield.Add (new Vector3 (x, y, z), dirt);
-					} else{
-						//} else if (z<=depth-1){
-						ITerrain air = new Air (new Vector3 (x, y, z));
-						battlefield.Add (new Vector3 (x, y, z), air);
-
-						//ITerrain layline = new Layline (new Vector3 (x, y, z));
-						//battlefield.Add (new Vector3 (x, y, z), layline);
-					}
-				}
-			}
-		}
 	}
 
     public Dictionary<Vector3, ITerrain> listPossibleMovements(IUnit unit)
@@ -310,5 +281,63 @@ public class Battlefield
         }
         else { return false; }
     }
+
+
+	private void createFlatland(int length, int width, int depth){
+
+		for (int x = 0; x < length; x++) {
+			for (int y = 0; y < width; y++) {
+				for (int z = 0; z <= depth; z++) {
+					if (z == 0) {
+						//BedrockLayer
+						ITerrain bedrock = new Bedrock (new Vector3 (x, y, z));
+						battlefield.Add (new Vector3 (x, y, z), bedrock);
+					} else if (z<=2){
+						ITerrain stone = new Stone (new Vector3 (x, y, z));
+						battlefield.Add (new Vector3 (x, y, z), stone);
+
+					} else if (z<=depth/2){
+						ITerrain dirt = new Dirt (new Vector3 (x, y, z));
+						battlefield.Add (new Vector3 (x, y, z), dirt);
+					} else{
+						//} else if (z<=depth-1){
+						ITerrain air = new Air (new Vector3 (x, y, z));
+						battlefield.Add (new Vector3 (x, y, z), air);
+
+						//ITerrain layline = new Layline (new Vector3 (x, y, z));
+						//battlefield.Add (new Vector3 (x, y, z), layline);
+					}
+				}
+			}
+		}
+	}
+
+
+	private void createStepland(int length, int width, int depth){
+
+		int height = 1;
+
+		for (int x = 0; x < length; x++) {
+			for (int y = 0; y < width; y++) {
+				for (int z = 0; z <= depth; z++) {
+					if (z == 0) {
+						//BedrockLayer
+						ITerrain bedrock = new Bedrock (new Vector3 (x, y, z));
+						battlefield.Add (new Vector3 (x, y, z), bedrock);
+					} else if (z>=height){
+						ITerrain air = new Air (new Vector3 (x, y, z));
+						battlefield.Add (new Vector3 (x, y, z), air);
+					} else{
+						ITerrain dirt = new Dirt (new Vector3 (x, y, z));
+						battlefield.Add (new Vector3 (x, y, z), dirt);
+
+					}
+
+				}
+			}
+			height++;
+		}
+	}
+
 
 }
