@@ -12,6 +12,7 @@ public abstract class IUnit : IWorldObject
 	protected IPlayer unitOwner;
     protected IMove move;
 
+
     public int getJumpHeight()
     {
         return this.move.getJumpHeight();
@@ -31,5 +32,11 @@ public abstract class IUnit : IWorldObject
     {
         move = new BasicMove(movement, jumpHeight);
     }
+
+	public List<IAttack> Attacks {
+		get {
+			return attacks;
+		}
+	}
 }
 

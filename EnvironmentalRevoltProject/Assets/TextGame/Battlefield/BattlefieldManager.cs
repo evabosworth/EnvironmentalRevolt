@@ -9,8 +9,9 @@ public class BattlefieldManager
 	private GlobalVariables gv;
 
 	public BattlefieldManager (){
-        string starttime = DateTime.Now.ToLongTimeString();
+ string starttime = DateTime.Now.ToLongTimeString();
         gv = GlobalVariables.getInstance ();
+
 		battlefield = new Battlefield ();
 
 		Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
@@ -22,6 +23,7 @@ public class BattlefieldManager
         string endtime = DateTime.Now.ToLongTimeString();
         gv.printToConsole(starttime+"       "+endtime+"");
         //gv.printToConsole((endtime - starttime) + "");
+
 		//battlefield.printBattlefield(validPositions);
 	}
 
@@ -30,12 +32,16 @@ public class BattlefieldManager
 		Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
 
 		IUnit unit = new Warrior ();
-		Vector3 pos = new Vector3 (0, 0, 0);
+		Vector3 pos = new Vector3 (10, 10, 5);
 
 		bool isPladced = tryPlaceUnitOntoBattlefield (pos, unit);
 		if (isPladced) {
 			unit.setCurrentPosition (pos);
 		}
+
+		List<Vector3> possibleAttackTargets = unit.Attacks [0].Range.getAllValidTerrainTargets (pos, battlefield);
+
+		printListOfVector3 (possibleAttackTargets);
 
 		//battlefield.printBattlefield ();
        	//battlefield.printBattlefield(validPositions);
@@ -46,6 +52,7 @@ public class BattlefieldManager
         // battlefield.printThingsOnBattlefield();
         battlefield.tryMoveUnit(unit, new Vector3(5.0f, 1.0f, 5.0f));
         battlefield.printThingsOnBattlefield();
+
 
 
     }
@@ -60,7 +67,7 @@ public class BattlefieldManager
 
 	}
 
-    public void printListOfMovement(List<Vector3> possibleMovements)
+    public void printListOfVector3(List<Vector3> possibleMovements)
     {
         foreach (Vector3 item in possibleMovements)
         {

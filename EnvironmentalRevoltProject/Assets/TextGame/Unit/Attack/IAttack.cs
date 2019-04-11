@@ -8,4 +8,9 @@ public abstract class IAttack
 	protected IRange range;
 	protected float damage = 20.0f;
 
+	public IRange Range {
+		get {
+			return range;
+		}
+	}
 }

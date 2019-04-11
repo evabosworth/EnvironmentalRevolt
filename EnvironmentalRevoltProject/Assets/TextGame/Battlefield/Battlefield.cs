@@ -15,8 +15,12 @@ public class Battlefield
 
 	public Battlefield(){
 
-		//createFlatland (length,width,depth);
-		createStepland(length,width,depth);
+		createFlatland (length,width,depth);
+		//createStepland(length,width,depth);
+	}
+
+	public Dictionary<Vector3, ITerrain> getBattlefield(){
+		return battlefield;
 	}
 
 	public Dictionary<Vector3, ITerrain> getAllValidPlacements(){
