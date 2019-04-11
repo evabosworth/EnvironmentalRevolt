@@ -67,11 +67,11 @@ public class BattlefieldManager
 
 	}
 
-    public void printListOfVector3(List<Vector3> possibleMovements)
+    public void printList<T>(List<T> list)
     {
-        foreach (Vector3 item in possibleMovements)
+		foreach (T item in list)
         {
-            gv.printToConsole(item.ToString());
+            gv.printToConsole(T.ToString());
         }
     }
 
