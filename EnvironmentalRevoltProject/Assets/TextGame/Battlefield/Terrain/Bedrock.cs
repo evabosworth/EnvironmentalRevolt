@@ -26,7 +26,7 @@ public class Bedrock : ITerrain
 
 
 
-	public override string toString (){
+	public override string ToString (){
 		string bedrock = "[bedrock](";
 		bedrock += currentPosition.ToString ();
 		bedrock += ");";

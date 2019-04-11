@@ -13,4 +13,11 @@ public abstract class IAttack
 			return range;
 		}
 	}
+    public float Damage
+    {
+        get
+        {
+            return damage;
+        }
+    }
 }

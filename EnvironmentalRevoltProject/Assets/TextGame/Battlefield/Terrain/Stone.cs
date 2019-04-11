@@ -23,7 +23,7 @@ public class Stone : ITerrain
 		return false;
 	}
 
-	public override string toString (){
+	public override string ToString (){
 		string stone = "[stone](";
 		stone += currentPosition.ToString ();
 		stone += ");";

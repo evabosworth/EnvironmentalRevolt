@@ -32,25 +32,43 @@ public class BattlefieldManager
 		Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
 
 		IUnit unit = new Warrior ();
-		Vector3 pos = new Vector3 (10, 10, 5);
+        IUnit unit2 = new Warrior();
+        IUnit unit3 = new Warrior();
 
-		bool isPladced = tryPlaceUnitOntoBattlefield (pos, unit);
-		if (isPladced) {
+		Vector3 pos = new Vector3 (10, 10, 5);
+        Vector3 pos2 = new Vector3(10, 4, 5);
+        Vector3 pos3 = new Vector3(10, 11, 5);
+
+
+		bool isPlaced = tryPlaceUnitOntoBattlefield (pos, unit);
+		if (isPlaced) {
 			unit.setCurrentPosition (pos);
 		}
+        isPlaced = tryPlaceUnitOntoBattlefield(pos2, unit2);
+        if (isPlaced)
+        {
+            unit2.setCurrentPosition(pos2);
+        }
+        isPlaced = tryPlaceUnitOntoBattlefield(pos3, unit3);
+        if (isPlaced)
+        {
+            unit3.setCurrentPosition(pos3);
+        }
 
-		List<Vector3> possibleAttackTargets = unit.Attacks [0].Range.getAllValidTerrainTargets (pos, battlefield);
 
-		printListOfVector3 (possibleAttackTargets);
-
-		//battlefield.printBattlefield ();
-       	//battlefield.printBattlefield(validPositions);
+        //battlefield.printBattlefield ();
+        //battlefield.printBattlefield(validPositions);
 
         Dictionary<Vector3,ITerrain> possibleMovements = new Dictionary<Vector3, ITerrain>();
         possibleMovements = battlefield.listPossibleMovements(unit);
-        battlefield.printBattlefield(possibleMovements);
+        // battlefield.printBattlefield(possibleMovements);
         // battlefield.printThingsOnBattlefield();
-        battlefield.tryMoveUnit(unit, new Vector3(5.0f, 1.0f, 5.0f));
+        battlefield.tryMoveUnit(unit, new Vector3(10.0f, 5.0f, 5.0f));        
+        List<Vector3> possibleTerrainTargets = unit.Attacks[0].Range.getAllValidTerrainTargets(unit.getCurrentPosition(), battlefield);
+        List<IWorldObject> possibleAttackUnits = battlefield.listPossibleTargets(possibleTerrainTargets);
+        battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
+        printList<Vector3>(possibleTerrainTargets);
+        battlefield.printListOfIWorldObjects(possibleAttackUnits);
         battlefield.printThingsOnBattlefield();
 
 
@@ -71,7 +89,7 @@ public class BattlefieldManager
     {
 		foreach (T item in list)
         {
-            gv.printToConsole(T.ToString());
+            gv.printToConsole(item.ToString());
         }
     }
 

@@ -14,6 +14,7 @@ public class Warrior : IUnit
         
 		attacks = new List<IAttack> ();
 		maxHealth = 200.0f;
+        curHealth = maxHealth;
 		IAttack basicSlash = new Slash ();
 		attacks.Add (basicSlash);
         move = new BasicMove(movement, jumpHeight);
@@ -22,10 +23,11 @@ public class Warrior : IUnit
 	}
 
 
-	public override string toString (){
+	public override string ToString (){
 		string warrior = "[warrior](";
 		warrior += currentPosition.ToString ();
-		warrior += "," + maxHealth.ToString ();
+        warrior += "," + curHealth.ToString();
+        warrior += "/" + maxHealth.ToString ();
 		warrior += "," + move.getMovement().ToString ();
 		//warrior += "," + attacks.ToString ();
 		warrior += ");";
@@ -37,6 +39,8 @@ public class Warrior : IUnit
 
 
 	}
+
+
 
 
 }

@@ -5,8 +5,7 @@ using UnityEngine;
 
 public abstract class IUnit : IWorldObject
 {
-	//Random start health vaue
-	protected float maxHealth = 100.0f;
+
 	//squares you can move in cardinal directions
 	protected List<IAttack> attacks;
 	protected IPlayer unitOwner;
@@ -38,5 +37,6 @@ public abstract class IUnit : IWorldObject
 			return attacks;
 		}
 	}
+
 }
 

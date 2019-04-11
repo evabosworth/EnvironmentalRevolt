@@ -95,7 +95,7 @@ public class Battlefield
 				for (int x = 0; x < length; x++) {
 					ITerrain curTile;
 					if(battlefield.TryGetValue(new Vector3(x,y,z), out curTile)){
-						str += curTile.toString ();
+						str += curTile.ToString ();
 					}
 				}
 			}
@@ -111,6 +111,16 @@ public class Battlefield
         printThingsOnBattlefield(objectsOnfield);
     }
 
+    public void printListOfIWorldObjects(List<IWorldObject> input)
+    {
+        string str = null;
+        foreach (IWorldObject item in input)
+        {
+            str += item.ToString();
+        }
+        GlobalVariables.getInstance().printToConsole(str);
+    }
+
 
     public void printThingsOnBattlefield(Dictionary<Vector3, IWorldObject> battlefield){
 		String str;
@@ -121,7 +131,7 @@ public class Battlefield
 				for (int x = 0; x < length; x++) {
 					IWorldObject curObject;
 					if(battlefield.TryGetValue(new Vector3(x,y,z), out curObject)){
-						str += curObject.toString ();
+						str += curObject.ToString ();
 					}
 				}
 			}
@@ -136,6 +146,7 @@ public class Battlefield
     {
         String str;
         str = "[bfObjects]";
+        IWorldObject curObject;
 
         for (int z = 0; z <= depth; z++)
         {
@@ -143,12 +154,13 @@ public class Battlefield
             {
                 for (int x = 0; x < length; x++)
                 {
-                    IWorldObject curObject;
+
                     if (battlefield.TryGetValue(new Vector3(x, y, z), out curObject))
                     {
+                        curObject = null;
                         if (curObject.GetType().IsInstanceOfType(typeof(IUnit)))
                         {
-                            str += curObject.toString();
+                            str += curObject.ToString();
                         }
 
                     }
@@ -199,22 +211,32 @@ public class Battlefield
         else { return false; }
     }
 
-    public List<IWorldObject> listPossibleTargets(IUnit attacker, IAttack attack)
+    public List<IWorldObject> listPossibleTargets(List<Vector3> positions)
     {
-
-
-
-
-        return new List<IWorldObject>();
+        List<IWorldObject> output = new List<IWorldObject>();
+        IWorldObject curObject;
+        foreach (Vector3 position in positions)
+        {
+            curObject = null;
+            if (objectsOnfield.TryGetValue(position, out curObject))
+            {
+                output.Add(curObject);
+            }
+        }
+        return output;
     }
 
-    public bool tryAttackWithUnit(IUnit attacker, IUnit target, IAttack attack)
+    public bool tryAttackWithUnit(IUnit attacker, IWorldObject target, IAttack attack, List<IWorldObject> possibleUnitsToAttack)
     {
-
-
-
-        return true;
+        if (possibleUnitsToAttack.Contains(target))
+        {
+            target.recieveAttack(attack);
+            return true;
+        }
+        else return false;
     }
+
+
 
 
 	private void createFlatland(int length, int width, int depth){
