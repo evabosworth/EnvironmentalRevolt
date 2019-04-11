@@ -128,13 +128,44 @@ public class Battlefield
 
 	}
 
+    public void printUnitsOnBattlefield(Dictionary<Vector3, IWorldObject> battlefield)
+    {
+        String str;
+        str = "[bfObjects]";
+
+        for (int z = 0; z <= depth; z++)
+        {
+            for (int y = 0; y < width; y++)
+            {
+                for (int x = 0; x < length; x++)
+                {
+                    IWorldObject curObject;
+                    if (battlefield.TryGetValue(new Vector3(x, y, z), out curObject))
+                    {
+                        if (curObject.GetType().IsInstanceOfType(typeof(IUnit)))
+                        {
+                            str += curObject.toString();
+                        }
+
+                    }
+                }
+            }
+            if (str != "")
+                GlobalVariables.getInstance().printToConsole(str);
+            str = "";
+        }
+    }
+
+
     public Dictionary<Vector3, ITerrain> listPossibleMovements(IUnit unit)
     {
         Dictionary<Vector3, ITerrain> possibleMoves = new Dictionary<Vector3, ITerrain>();
         Vector3 unitPosInitial = unit.getCurrentPosition();
         List<Vector3> visitedPositionsRecursive = new List<Vector3>();
         int movementLeft = unit.getMovement();
-        List<Vector3> visitedPositions = listPossibleMovementsRecursion(unitPosInitial, movementLeft, visitedPositionsRecursive, unit.getJumpHeight());
+        Dictionary<Vector3, ITerrain> possiblePlacements;
+        possiblePlacements = getAllValidPlacements();
+        List<Vector3> visitedPositions = unit.getMovementType().listPossibleMovementsRecursion(unitPosInitial, movementLeft, visitedPositionsRecursive, unit.getJumpHeight(), this, possiblePlacements);
         foreach (Vector3 item in visitedPositions)
         {
             ITerrain terrain;
@@ -145,200 +176,7 @@ public class Battlefield
         return possibleMoves;
     }
 
-    private List<Vector3> listPossibleMovementsRecursion(Vector3 unitPosition, int movementLeft, List<Vector3> visitedPositionsRecursive, int jumpHeight)
-    {
-        GlobalVariables gv = GlobalVariables.getInstance();
-        //gv.printToConsole(movementLeft.ToString());
-        
-        Vector3 unitXP1 = unitPosition;
-        unitXP1.x += 1;
-        Vector3 unitXM1 = unitPosition;
-        unitXM1.x -= 1;
-        Vector3 unitYP1 = unitPosition;
-        unitYP1.y += 1;
-        Vector3 unitYM1 = unitPosition;
-        unitYM1.y -= 1;
-        Vector3 unitZP1 = unitPosition;
-        unitZP1.z += 1;
-        Vector3 unitZM1 = unitPosition;
-        unitZM1.z -= 1;
-        
-         
-        //x+1,x-1,y+1,y-1
 
-        if (movementLeft == 0)
-        {
-            return visitedPositionsRecursive;
-        }
-        //x+1
-        if (isValidForUnitPlacement(unitXP1))
-        {
-            if (!visitedPositionsRecursive.Contains(unitXP1) || movementLeft > 1)
-            {
-                //gv.printToConsole(unitXP1.ToString());
-                if (!visitedPositionsRecursive.Contains(unitXP1))
-                {
-                    visitedPositionsRecursive.Add(unitXP1);
-                }
-                List<Vector3> holderList = new List<Vector3>();
-                holderList = listPossibleMovementsRecursion(unitXP1, movementLeft - 1, visitedPositionsRecursive,jumpHeight);
-
-
-            }
-        }
-        else
-        {
-            Dictionary<Vector3, ITerrain> possiblePlacements;
-            possiblePlacements = getAllValidPlacements();
-            for (int i = -jumpHeight; i < jumpHeight; i++)
-            {
-                Vector3 tempPos = new Vector3();
-                tempPos = unitXP1;
-                tempPos.z += i;
-                if (possiblePlacements.ContainsKey(tempPos))
-                {
-                    if (!visitedPositionsRecursive.Contains(tempPos) || movementLeft > 1)
-                    {
-                        //gv.printToConsole(unitXP1.ToString());
-                        if (!visitedPositionsRecursive.Contains(tempPos))
-                        {
-                            visitedPositionsRecursive.Add(tempPos);
-                        }
-                        List<Vector3> holderList = new List<Vector3>();
-                        holderList = listPossibleMovementsRecursion(tempPos, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
-
-                    }
-                }
-            }
-        }
-
-        //y+1
-        if (isValidForUnitPlacement(unitYP1))
-        {
-            if (!visitedPositionsRecursive.Contains(unitYP1)||movementLeft > 1)
-            {
-                if (!visitedPositionsRecursive.Contains(unitYP1))
-                {
-                    visitedPositionsRecursive.Add(unitYP1);
-                }
-                List<Vector3> holderList = new List<Vector3>();
-                holderList = listPossibleMovementsRecursion(unitYP1, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
-
-
-            }
-        }
-        else
-        {
-            Dictionary<Vector3, ITerrain> possiblePlacements;
-            possiblePlacements = getAllValidPlacements();
-            for (int i = -jumpHeight; i < jumpHeight; i++)
-            {
-                Vector3 tempPos = new Vector3();
-                tempPos = unitYP1;
-                tempPos.z += i;
-                if (possiblePlacements.ContainsKey(tempPos))
-                {
-                    if (!visitedPositionsRecursive.Contains(tempPos) || movementLeft > 1)
-                    {
-                        //gv.printToConsole(unitXP1.ToString());
-                        if (!visitedPositionsRecursive.Contains(tempPos))
-                        {
-                            visitedPositionsRecursive.Add(tempPos);
-                        }
-                        List<Vector3> holderList = new List<Vector3>();
-                        holderList = listPossibleMovementsRecursion(tempPos, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
-
-                    }
-                }
-            }
-        }
-
-        //x-1      
-        if (isValidForUnitPlacement(unitXM1))
-        {
-            if (!visitedPositionsRecursive.Contains(unitXM1)||movementLeft > 1)
-            {
-                if (!visitedPositionsRecursive.Contains(unitXM1))
-                {
-                    visitedPositionsRecursive.Add(unitXM1);
-
-                }
-                List<Vector3> holderList = new List<Vector3>();
-                holderList = listPossibleMovementsRecursion(unitXM1, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
-
-
-            }
-        }
-        else
-        {
-            Dictionary<Vector3, ITerrain> possiblePlacements;
-            possiblePlacements = getAllValidPlacements();
-            for (int i = -jumpHeight; i < jumpHeight; i++)
-            {
-                Vector3 tempPos = new Vector3();
-                tempPos = unitXM1;
-                tempPos.z += i;
-                if (possiblePlacements.ContainsKey(tempPos))
-                {
-                    if (!visitedPositionsRecursive.Contains(tempPos) || movementLeft > 1)
-                    {
-                        //gv.printToConsole(unitXP1.ToString());
-                        if (!visitedPositionsRecursive.Contains(tempPos))
-                        {
-                            visitedPositionsRecursive.Add(tempPos);
-                        }
-                        List<Vector3> holderList = new List<Vector3>();
-                        holderList = listPossibleMovementsRecursion(tempPos, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
-
-                    }
-                }
-            }
-        }
-
-        //y-1
-        if (isValidForUnitPlacement(unitYM1))
-        {
-            if (!visitedPositionsRecursive.Contains(unitYM1)||movementLeft > 1)
-            {
-                if (!visitedPositionsRecursive.Contains(unitYM1))
-                {
-                    visitedPositionsRecursive.Add(unitYM1);
-                }
-                List<Vector3> holderList = new List<Vector3>();
-                holderList = listPossibleMovementsRecursion(unitYM1, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
-
-
-            }
-        }
-        else
-        {
-            Dictionary<Vector3, ITerrain> possiblePlacements;
-            possiblePlacements = getAllValidPlacements();
-            for (int i = -jumpHeight; i < jumpHeight; i++)
-            {
-                Vector3 tempPos = new Vector3();
-                tempPos = unitYM1;
-                tempPos.z += i;
-                if (possiblePlacements.ContainsKey(tempPos))
-                {
-                    if (!visitedPositionsRecursive.Contains(tempPos) || movementLeft > 1)
-                    {
-                        //gv.printToConsole(unitXP1.ToString());
-                        if (!visitedPositionsRecursive.Contains(tempPos))
-                        {
-                            visitedPositionsRecursive.Add(tempPos);
-                        }
-                        List<Vector3> holderList = new List<Vector3>();
-                        holderList = listPossibleMovementsRecursion(tempPos, movementLeft - 1, visitedPositionsRecursive, jumpHeight);
-
-                    }
-                }
-            }
-        }
-
-
-        return visitedPositionsRecursive;
-    }
 
     public bool tryMoveUnit(IUnit unit, Vector3 toPos, Dictionary<Vector3,ITerrain> possibleMoves = null)
     {
@@ -355,6 +193,23 @@ public class Battlefield
             return true;
         }
         else { return false; }
+    }
+
+    public List<IWorldObject> listPossibleTargets(IUnit attacker, IAttack attack)
+    {
+
+
+
+
+        return new List<IWorldObject>();
+    }
+
+    public bool tryAttackWithUnit(IUnit attacker, IUnit target, IAttack attack)
+    {
+
+
+
+        return true;
     }
 
 

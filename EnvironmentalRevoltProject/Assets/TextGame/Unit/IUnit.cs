@@ -8,19 +8,28 @@ public abstract class IUnit : IWorldObject
 	//Random start health vaue
 	protected float maxHealth = 100.0f;
 	//squares you can move in cardinal directions
-	protected int movement = 4;
 	protected List<IAttack> attacks;
 	protected IPlayer unitOwner;
-    protected int jumpHeight = 2;
+    protected IMove move;
 
     public int getJumpHeight()
     {
-        return jumpHeight;
+        return this.move.getJumpHeight();
+    }
+
+    public IMove getMovementType()
+    {
+        return move;
     }
 
     public int getMovement()
     {
-        return movement;
+        return move.getMovement();
+    }
+
+    public IUnit(int movement, int jumpHeight)
+    {
+        move = new BasicMove(movement, jumpHeight);
     }
 }
 

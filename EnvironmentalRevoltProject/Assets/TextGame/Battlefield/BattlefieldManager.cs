@@ -9,7 +9,7 @@ public class BattlefieldManager
 	private GlobalVariables gv;
 
 	public BattlefieldManager (){
-        float starttime = DateTime.Now.Millisecond;
+        string starttime = DateTime.Now.ToLongTimeString();
         gv = GlobalVariables.getInstance ();
 		battlefield = new Battlefield ();
 
@@ -19,8 +19,9 @@ public class BattlefieldManager
 
 		exampleRun ();
 
-        float endtime = DateTime.Now.Millisecond;
-        gv.printToConsole((endtime-starttime)+"");
+        string endtime = DateTime.Now.ToLongTimeString();
+        gv.printToConsole(starttime+"       "+endtime+"");
+        //gv.printToConsole((endtime - starttime) + "");
 		//battlefield.printBattlefield(validPositions);
 	}
 
@@ -42,7 +43,8 @@ public class BattlefieldManager
         Dictionary<Vector3,ITerrain> possibleMovements = new Dictionary<Vector3, ITerrain>();
         possibleMovements = battlefield.listPossibleMovements(unit);
         battlefield.printBattlefield(possibleMovements);
-        //battlefield.tryMoveUnit(unit, new Vector3(0.0f, 11.0f, 5.0f));
+        // battlefield.printThingsOnBattlefield();
+        battlefield.tryMoveUnit(unit, new Vector3(5.0f, 1.0f, 5.0f));
         battlefield.printThingsOnBattlefield();
 
 
@@ -65,6 +67,8 @@ public class BattlefieldManager
             gv.printToConsole(item.ToString());
         }
     }
+
+
 
 }
 

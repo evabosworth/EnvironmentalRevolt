@@ -10,12 +10,13 @@ public class Warrior : IUnit
 	private List<IAttack> attacks;
 	*/
 
-	public Warrior(){
+	public Warrior(int movement = 6, int jumpHeight = 2):base(movement, jumpHeight){
+        
 		attacks = new List<IAttack> ();
 		maxHealth = 200.0f;
-		movement = 6;
 		IAttack basicSlash = new Slash ();
 		attacks.Add (basicSlash);
+        move = new BasicMove(movement, jumpHeight);
 
 
 	}
@@ -25,7 +26,7 @@ public class Warrior : IUnit
 		string warrior = "[warrior](";
 		warrior += currentPosition.ToString ();
 		warrior += "," + maxHealth.ToString ();
-		warrior += "," + movement.ToString ();
+		warrior += "," + move.getMovement().ToString ();
 		//warrior += "," + attacks.ToString ();
 		warrior += ");";
 
