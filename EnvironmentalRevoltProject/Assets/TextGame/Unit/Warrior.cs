@@ -18,9 +18,16 @@ public class Warrior : IUnit
 		IAttack basicSlash = new Slash ();
 		attacks.Add (basicSlash);
         move = new BasicMove(movement, jumpHeight);
+        experienceReward = 16;
+
+        strength = 5;
+        physicalDefense = 5;
+        intelligence = 1;
+        magicDefense = 1;
+        dexterity = 3;
 
 
-	}
+}
 
 
 	public override string ToString (){
@@ -29,6 +36,7 @@ public class Warrior : IUnit
         warrior += "," + curHealth.ToString();
         warrior += "/" + maxHealth.ToString ();
 		warrior += "," + move.getMovement().ToString ();
+        warrior += "," + curLevel.ToString();
 		//warrior += "," + attacks.ToString ();
 		warrior += ");";
 

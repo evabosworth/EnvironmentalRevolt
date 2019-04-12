@@ -9,6 +9,7 @@ public abstract class IWorldObject
     //Random start health value
     protected float maxHealth = 100.0f;
     protected float curHealth = 100.0f;
+    protected int experienceReward;
 
     public abstract string ToString ();
 	public abstract void fromString(String str);
@@ -21,9 +22,28 @@ public abstract class IWorldObject
     {
         return currentPosition;
     }
-    public void recieveAttack(IAttack attack)
+    public bool recieveAttack(IAttack attack, IUnit attacker)
     {
-        this.curHealth -= attack.Damage;
+        this.curHealth -= attack.getDamage(attacker);
+        if(this.curHealth <= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool makeAttack(IAttack attack, IWorldObject target, IUnit attacker)
+    {
+
+        return target.recieveAttack(attack, attacker);
+    }
+
+    public int getExperienceReward()
+    {
+        return experienceReward;
     }
 }
 

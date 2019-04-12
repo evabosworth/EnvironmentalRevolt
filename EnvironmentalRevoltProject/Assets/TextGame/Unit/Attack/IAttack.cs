@@ -6,18 +6,17 @@ using UnityEngine;
 public abstract class IAttack
 {
 	protected IRange range;
-	protected float damage = 20.0f;
+	protected float baseDamage;
+    protected float endDamage;
 
 	public IRange Range {
 		get {
 			return range;
 		}
 	}
-    public float Damage
+    public float getDamage(IUnit attacker = null)
     {
-        get
-        {
-            return damage;
-        }
+        return modifyAttack(attacker);
     }
+    public abstract float modifyAttack(IUnit attacker = null);
 }

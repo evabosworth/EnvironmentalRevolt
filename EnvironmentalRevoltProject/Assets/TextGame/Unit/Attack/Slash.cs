@@ -7,8 +7,21 @@ public class Slash : IAttack
 {
 	//IRange range;
 	public Slash(){
-		damage = 50;
+		baseDamage = 50;
 		range = new MeleeRange();
 	}
+
+    public override float modifyAttack(IUnit attacker = null)
+    {
+        if(attacker == null)
+        {
+            endDamage = baseDamage;
+        }
+        else
+        {
+            endDamage = baseDamage + attacker.strength;
+        }
+        return endDamage;
+    }
 
 }

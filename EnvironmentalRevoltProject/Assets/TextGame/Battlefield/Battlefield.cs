@@ -230,7 +230,14 @@ public class Battlefield
     {
         if (possibleUnitsToAttack.Contains(target))
         {
-            target.recieveAttack(attack);
+            bool isDead = false;
+            isDead = attacker.makeAttack(attack, target, attacker);
+            if (isDead)
+            {
+                attacker.addExperienceToUnit(target.getExperienceReward());
+                //TODO add a body when a unit dies
+                objectsOnfield.Remove(target.getCurrentPosition());
+            }
             return true;
         }
         else return false;
