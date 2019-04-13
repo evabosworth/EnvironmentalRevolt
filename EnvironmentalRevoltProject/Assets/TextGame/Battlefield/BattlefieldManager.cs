@@ -14,7 +14,10 @@ public class BattlefieldManager
 
 		battlefield = new Battlefield ();
 
+		/*
 		Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
+		battlefield.printBattlefield(validPositions);
+		*/
 
 
 
@@ -24,12 +27,11 @@ public class BattlefieldManager
         gv.printToConsole(starttime+"       "+endtime+"");
         //gv.printToConsole((endtime - starttime) + "");
 
-		//battlefield.printBattlefield(validPositions);
 	}
 
 	//A list of actions to test things as if user input
 	public void exampleRun(){
-		Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
+		//Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
 
 		IUnit unit = new Warrior ();
         IUnit unit2 = new Warrior();
@@ -69,10 +71,14 @@ public class BattlefieldManager
         List<IWorldObject> possibleAttackUnits = battlefield.listPossibleTargets(possibleTerrainTargets);
 
         battlefield.printListOfIWorldObjects(possibleAttackUnits);
-        battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
-        battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
-        battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
-        battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
+		battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
+		battlefield.printThingsOnBattlefield();
+		battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
+		battlefield.printThingsOnBattlefield();
+		battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
+		battlefield.printThingsOnBattlefield();
+		battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
+		battlefield.printThingsOnBattlefield();
         battlefield.tryAttackWithUnit(unit, unit3, unit.Attacks[0], possibleAttackUnits);
 
 

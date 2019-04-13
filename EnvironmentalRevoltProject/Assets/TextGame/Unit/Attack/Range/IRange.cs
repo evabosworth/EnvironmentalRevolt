@@ -13,7 +13,14 @@ public abstract class IRange
 
 	protected int heightDifferential;
 
-	public abstract List<Vector3> getAllMaxEffectiveValidTerrainTargets(Vector3 position, Battlefield battlefield);
+	public List<Vector3> getAllMaxEffectiveValidTerrainTargets (Vector3 position, Battlefield battlefield)
+	{
+		List<Vector3> terrainTargets;
+		terrainTargets = getAllValidTerrainTargetsRecursive (position, battlefield, new List<Vector3> (), maxEffectiveRange, battlefield.getAllValidPlacements ());
+
+
+		return terrainTargets;
+	}
 
 	public List<Vector3> getAllValidTerrainTargets (Vector3 position, Battlefield battlefield)
 	{

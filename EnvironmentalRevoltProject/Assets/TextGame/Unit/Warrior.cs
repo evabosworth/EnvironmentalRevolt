@@ -18,7 +18,7 @@ public class Warrior : IUnit
 		IAttack basicSlash = new Slash ();
 		attacks.Add (basicSlash);
         move = new BasicMove(movement, jumpHeight);
-        experienceReward = 16;
+        experienceReward = 100;
 
         strength = 5;
         physicalDefense = 5;

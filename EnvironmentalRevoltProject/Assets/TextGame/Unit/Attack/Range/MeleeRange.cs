@@ -22,18 +22,7 @@ public class MeleeRange : IRange
 
 
 	}
-
-
-	public override List<Vector3> getAllMaxEffectiveValidTerrainTargets (Vector3 position, Battlefield battlefield)
-	{
-		List<Vector3> terrainTargets;
-		terrainTargets = getAllValidTerrainTargetsRecursive (position, battlefield, new List<Vector3> (), maxEffectiveRange, battlefield.getAllValidPlacements ());
-
-
-		return terrainTargets;
-	} 
-
-
+		
 
 }
 
