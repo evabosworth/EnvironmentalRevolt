@@ -12,6 +12,10 @@ public class PointRange : IRange
 	 */
 	public PointRange (int maxEffectiveRange = 4, int minEffectiveRange = 0, int maxRange = 8, int minRange = 0)
 	{
+		this.maxRange = maxRange;
+		this.minRange = minRange;
+		this.maxEffectiveRange = maxEffectiveRange;
+		this.minEffectiveRange = minEffectiveRange;
 
 
 		heightDifferential = 5;

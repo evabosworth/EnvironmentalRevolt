@@ -67,9 +67,10 @@ public class BattlefieldManager
         // battlefield.printThingsOnBattlefield();
         battlefield.tryMoveUnit(unit, new Vector3(10.0f, 5.0f, 5.0f));        
 		//List<Vector3> possibleTerrainTargets = unit.Attacks[0].Range.getAllValidTerrainTargets(unit.getCurrentPosition(), battlefield);
-		List<Vector3> possibleTerrainTargets = unit.Attacks[0].Range.getAllMaxEffectiveValidTerrainTargets(unit.getCurrentPosition(), battlefield);
-        List<IWorldObject> possibleAttackUnits = battlefield.listPossibleTargets(possibleTerrainTargets);
+		List<Vector3> possibleTerrainTargets;// = unit.Attacks[0].Range.getAllMaxEffectiveValidTerrainTargets(unit.getCurrentPosition(), battlefield);
+		//List<IWorldObject> possibleAttackUnits;// = battlefield.listPossibleTargets(possibleTerrainTargets);
 
+		/*
         battlefield.printListOfIWorldObjects(possibleAttackUnits);
 		battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
 		battlefield.printThingsOnBattlefield();
@@ -80,7 +81,13 @@ public class BattlefieldManager
 		battlefield.tryAttackWithUnit(unit, unit2, unit.Attacks[0], possibleAttackUnits);
 		battlefield.printThingsOnBattlefield();
         battlefield.tryAttackWithUnit(unit, unit3, unit.Attacks[0], possibleAttackUnits);
+        */
 
+
+		//possibleTerrainTargets = unit.Attacks[1].Range.getAllValidTerrainTargets(unit.getCurrentPosition(), battlefield);
+		possibleTerrainTargets = unit.Attacks[1].Range.getAllMaxEffectiveValidTerrainTargets(unit.getCurrentPosition(), battlefield);
+
+		printList<Vector3> (possibleTerrainTargets);
 
         battlefield.printThingsOnBattlefield();
 

@@ -14,9 +14,11 @@ public class Warrior : IUnit
         
 		attacks = new List<IAttack> ();
 		maxHealth = 200.0f;
-        curHealth = maxHealth;
+		curHealth = maxHealth;
 		IAttack basicSlash = new Slash ();
+		IAttack basicStab = new Stab ();
 		attacks.Add (basicSlash);
+		attacks.Add (basicStab);
         move = new BasicMove(movement, jumpHeight);
         experienceReward = 100;
 
