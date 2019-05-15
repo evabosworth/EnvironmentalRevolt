@@ -48,6 +48,7 @@ public class Battlefield
 		bool isValidForPlacement = isValidForUnitPlacement (unitPlacePosition, objectToPlace);
 		if (isValidForPlacement) {
 			objectsOnfield.Add (unitPlacePosition, objectToPlace);
+			objectToPlace.setCurrentPosition (unitPlacePosition);
 		}
 
 		return isValidForPlacement;

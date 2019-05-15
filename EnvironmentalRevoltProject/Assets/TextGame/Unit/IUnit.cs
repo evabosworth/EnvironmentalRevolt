@@ -80,7 +80,8 @@ public abstract class IUnit : IWorldObject
 
     private bool checkIfLevelUp()
     {
-		int levelCount = ExperienceCurve.getLevelFromStandardExp (experienceTotal);
+		MasterRules rules = MasterRules.getInstance ();
+		int levelCount = rules.ExperienceRules.getLevelFromStandardExp (experienceTotal);
 
         if(curLevel < levelCount)
         {

@@ -8,10 +8,14 @@ public abstract class ITerrain : IWorldObject
 	/*
 	 *	Placement is ontop of the terrain. So if an object can be ontop of this terrain
 	 */
-	public abstract bool allowPlacement(IWorldObject toPlaceObject);
+	public virtual bool allowPlacement(IWorldObject toPlaceObject){
+		return true;
+	}
 	/*
-	 *	Occupation is in the terrain. So if an object can held within the tile.
+	 *	Occupation is in the terrain. So if an object can be held within the tile.
 	 */
-	public abstract bool allowOccupation (IWorldObject toPlaceObject);
+	public virtual bool allowOccupation (IWorldObject toPlaceObject){
+		return true;
+	}
 }
 

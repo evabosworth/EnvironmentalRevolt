@@ -9,7 +9,7 @@ public class BattlefieldManager
 	private GlobalVariables gv;
 
 	public BattlefieldManager (){
- string starttime = DateTime.Now.ToLongTimeString();
+ 		string starttime = DateTime.Now.ToLongTimeString();
         gv = GlobalVariables.getInstance ();
 
 		battlefield = new Battlefield ();
@@ -21,7 +21,7 @@ public class BattlefieldManager
 
 
 
-		exampleRun ();
+		inputRun ();
 
         string endtime = DateTime.Now.ToLongTimeString();
         gv.printToConsole(starttime+"       "+endtime+"");
@@ -29,8 +29,24 @@ public class BattlefieldManager
 
 	}
 
+	//Get a value from user input
+	//And do whatever needs to be done with it.
+	public void acceptInput(int inputValue){
+	
+	}
+
+	private void inputRun(){
+		IUnit warrior0 = new Warrior ();
+		IUnit archer0 = new Archer();
+		IUnit warrior1 = new Warrior();
+
+		Vector3 pos = new Vector3 (10, 10, 5);
+		Vector3 pos2 = new Vector3(10, 4, 5);
+		Vector3 pos3 = new Vector3(9, 5, 5);
+	}
+
 	//A list of actions to test things as if user input
-	public void exampleRun(){
+	private void exampleRun(){
 		//Dictionary<Vector3, ITerrain> validPositions = battlefield.getAllValidPlacements ();
 
 		IUnit unit = new Warrior ();
@@ -43,19 +59,9 @@ public class BattlefieldManager
 
 
 		bool isPlaced = tryPlaceUnitOntoBattlefield (pos, unit);
-		if (isPlaced) {
-			unit.setCurrentPosition (pos);
-		}
-        isPlaced = tryPlaceUnitOntoBattlefield(pos2, unit2);
-        if (isPlaced)
-        {
-            unit2.setCurrentPosition(pos2);
-        }
+        isPlaced = tryPlaceUnitOntoBattlefield(pos2, unit2); 
         isPlaced = tryPlaceUnitOntoBattlefield(pos3, unit3);
-        if (isPlaced)
-        {
-            unit3.setCurrentPosition(pos3);
-        }
+       
 
 
         //battlefield.printBattlefield ();
@@ -107,9 +113,11 @@ public class BattlefieldManager
 
     public void printList<T>(List<T> list)
     {
+		int count = 0;
 		foreach (T item in list)
         {
-            gv.printToConsole(item.ToString());
+            gv.printToConsole("[" + count + "]" +item.ToString());
+			count++;
         }
     }
 
